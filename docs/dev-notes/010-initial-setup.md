@@ -1,3 +1,36 @@
+# 初期セットアップ
+
+## ステップ
+
+### インストール
+
+- プロジェクトを作成するディレクトリに移動する。
+
+```sh
+cd {任意のディレクトリ}
+```
+
+- Remixをインストールする。
+
+```sh
+npx create-remix@latest
+```
+
+> コマンドにしたがって、プロジェクトを作成する。
+
+### サーバーのポートを変更（任意）
+
+- ポートはvite.config.tsで設定する
+
+`.env`
+
+```text
+PORT=3000
+```
+
+`vite.config.ts`
+
+```ts
 import { vitePlugin as remix } from "@remix-run/dev";
 import { defineConfig, loadEnv } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
@@ -28,3 +61,4 @@ export default ({ mode }: { mode: string; }) => {
     },
   });
 };
+```
