@@ -16,11 +16,7 @@ docker pull prismagraphql/mongo-single-replica:5.0.3
 ### 2. Run the image with this command
 
 ```sh
-docker run --name docker-mongo --restart always \
-      -p 27017:27017 \
-      -e MONGO_INITDB_ROOT_USERNAME="monty" \
-      -e MONGO_INITDB_ROOT_PASSWORD="pass" \
-      -d prismagraphql/mongo-single-replica:5.0.3
+docker run --name docker-mongo --restart always -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME="monty" -e MONGO_INITDB_ROOT_PASSWORD="pass" -d prismagraphql/mongo-single-replica:5.0.3
 ```
 
 ### 3. Setup the connection URL to `.env`

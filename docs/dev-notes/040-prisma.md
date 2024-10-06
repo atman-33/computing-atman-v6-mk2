@@ -27,3 +27,30 @@ datasource db {
 
 // 以下、Model定義...
 ```
+
+### singleton生成関数を作成
+
+> 後で準備するPrismaClientはシングルトンで利用したいため、シングルトン生成用の関数を準備しておく。
+
+`app/utils/singleton.ts`
+
+```ts
+export const singleton = <Value>(name: string, valueFactory: () => Value): Value => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const g = global as any;
+  g.__singletons ??= {};
+  g.__singletons[name] ??= valueFactory();
+  return g.__singletons[name];
+};
+```
+
+### PrismaClientを作成
+
+`app/lib/prisma.ts`
+
+```ts
+import { PrismaClient } from '@prisma/client';
+import { singleton } from '~/utils/singleton';
+
+export const prisma = singleton('prisma', () => new PrismaClient());
+```

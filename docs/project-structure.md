@@ -51,6 +51,8 @@ app/routes/awesome-page._index
 |
 +-- hooks       # 特定の機能にスコープが限定されたフック
 |
++-- services    # 特定の機能のサービス（ビジネスロジック）
+|
 +-- stores      # 特定の機能の状態ストア
 |
 +-- types       # TS特有の機能ドメイン用のTypeScriptタイプ
