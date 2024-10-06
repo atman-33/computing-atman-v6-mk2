@@ -40,6 +40,7 @@ const formStrategy = new FormStrategy(async ({ form }) => {
   return userWithoutPassword;
 });
 
+// NOTE: フォームストラテジーには「user-pass」の名称を設定
 authenticator.use(formStrategy, 'user-pass');
 
 export { authenticator };
