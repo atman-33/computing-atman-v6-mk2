@@ -145,16 +145,14 @@ authenticator.use(formStrategy, 'user-pass');
 export { authenticator };
 ```
 
-#### ログイン画面を作成
-
-##### バリデーションライブラリをインストール
+#### バリデーションライブラリをインストール
 
 ```sh
 npm i remix-validated-form
 npm i @remix-validated-form/with-zod
 ```
 
-##### バリデーターを作成
+#### バリデーターを作成
 
 `app/routes/auth.login._index/login-validator.ts`
 
@@ -180,11 +178,11 @@ const loginFormSchema = z.object({
 export const loginValidator = withZod(loginFormSchema);
 ```
 
-##### テキストフィールドを作成
+#### テキストフィールドを作成
 
 `app/routes/auth/components/text-field.tsx`
 
-```ts
+```tsx
 import { ComponentProps, FC } from 'react';
 import { useField } from 'remix-validated-form';
 import { Input } from '~/components/shadcn/ui/input';
@@ -217,11 +215,11 @@ export const TextField: FC<TextFieldProps> = ({ htmlFor, label, type, errorMessa
 };
 ```
 
-##### ログインページを作成
+#### ログインページを作成
 
 `app/routes/auth.login._index/route.tsx`
 
-```ts
+```tsx
 import { ActionFunctionArgs, json, LoaderFunctionArgs, MetaFunction } from '@remix-run/node';
 import { Link, useActionData } from '@remix-run/react';
 import { AlertCircle } from 'lucide-react';
@@ -305,4 +303,47 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
+```
+
+### ログアウト機能
+
+#### ログアウトページを作成
+
+`app/routes/_index.tsx`
+
+```tsx
+import type { ActionFunctionArgs, LoaderFunctionArgs, MetaFunction } from '@remix-run/node';
+import { Form, useLoaderData } from '@remix-run/react';
+import { Button } from '~/components/shadcn/ui/button';
+import { authenticator } from './auth/services/auth.server';
+
+export const meta: MetaFunction = () => {
+  return [{ title: 'New Remix App' }, { name: 'description', content: 'Welcome to Remix!' }];
+};
+
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const user = await authenticator.isAuthenticated(request, {
+    failureRedirect: '/auth/login',
+  });
+
+  return user;
+};
+
+export const action = async ({ request }: ActionFunctionArgs) => {
+  return await authenticator.logout(request, { redirectTo: '/auth/login' });
+};
+
+export default function Index() {
+  const user = useLoaderData<typeof loader>() as { name: string };
+  return (
+    <>
+      <h1>{`Hello ${user.name} さん`}</h1>
+      <Form method="POST">
+        <Button type="submit" name="action" value="logout">
+          Logout
+        </Button>
+      </Form>
+    </>
+  );
+}
 ```
