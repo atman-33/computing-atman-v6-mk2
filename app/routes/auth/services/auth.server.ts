@@ -25,13 +25,15 @@ const formStrategy = new FormStrategy(async ({ form }) => {
   const user = await prisma.user.findUnique({ where: { email: String(email) } });
 
   if (!user) {
-    throw new AuthorizationError();
+    console.log(`${email} ユーザーが存在しません`);
+    throw new AuthorizationError(`${email} ユーザーが存在しません`);
   }
 
   const passwordsMatch = await bcrypt.compare(String(password), user.password);
 
   if (!passwordsMatch) {
-    throw new AuthorizationError();
+    console.log(`パスワードが一致しません`);
+    throw new AuthorizationError(`パスワードが一致しません`);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
