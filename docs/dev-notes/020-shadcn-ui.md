@@ -54,7 +54,7 @@ npx shadcn@latest init
     extend: {
       fontFamily: {
         sans: [
-          'Inter"',
+          'Inter',
           'ui-sans-serif',
           'system-ui',
           'sans-serif',
@@ -65,6 +65,8 @@ npx shadcn@latest init
         ],
       },
 ```
+
+> 設定が不要であれば、fontFamily自体をコメントアウトすればよい。
 
 ## eslint, prettier無視の設定
 
