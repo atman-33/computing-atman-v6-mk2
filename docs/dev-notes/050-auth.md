@@ -347,3 +347,100 @@ export default function Index() {
   );
 }
 ```
+
+### Google認証
+
+#### Google認証情報の取得
+
+以下の記事の「Google Developer Consoleにアクセス」の部分から「認証情報の取得」の取得までの設定を行い、環境変数に値を定義する。  
+
+- [NextAuth.jsでNext.js13にGoogle認証機能を実装](https://zenn.dev/hayato94087/articles/91179fbbe1cad4)
+
+#### envにGoogle認証用の設定を追加
+
+`.env`
+
+```sh
+# Google認証
+CLIENT_URL='http://localhost:3000'
+GOOGLE_CLIENT_ID='****'
+GOOGLE_CLIENT_SECRET='****'
+```
+
+`app/config/env.ts`
+
+```ts
+export const env = {
+  SESSION_SECRET: process.env['SESSION_SECRET'] as string,
+  CLIENT_URL: process.env['CLIENT_URL'] as string,
+  GOOGLE_CLIENT_ID: process.env['GOOGLE_CLIENT_ID'] as string,
+  GOOGLE_CLIENT_SECRET: process.env['GOOGLE_CLIENT_SECRET '] as string,
+};
+```
+
+`app/routes/auth/services/auth.server.ts`
+
+- Googleストラテジーを追加
+
+```ts
+import { User } from '@prisma/client';
+import bcrypt from 'bcryptjs';
+import { Authenticator, AuthorizationError } from 'remix-auth';
+import { FormStrategy } from 'remix-auth-form';
+import { GoogleStrategy } from 'remix-auth-google';
+import { env } from '~/config/env';
+import { prisma } from '~/lib/prisma';
+import { sessionStorage } from './session.server';
+
+const SESSION_SECRET = env.SESSION_SECRET;
+
+if (!SESSION_SECRET) {
+  throw new Error('SESSION_SECRET is not defined');
+}
+
+const authenticator = new Authenticator<Omit<User, 'password'>>(sessionStorage);
+
+// ---- FormStrategy ---- //
+// ...
+
+// NOTE: フォームストラテジーには「user-pass」の名称を設定
+authenticator.use(formStrategy, 'user-pass');
+
+// ---- GoogleStrategy ---- //
+if (!(env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET && env.CLIENT_URL)) {
+  throw new Error('GOOGLE_CLIENT_ID、GOOGLE_CLIENT_SECRET、CLIENT_URLが設定されていません。');
+}
+
+const googleStrategy = new GoogleStrategy<User>(
+  {
+    clientID: env.GOOGLE_CLIENT_ID || '',
+    clientSecret: env.GOOGLE_CLIENT_SECRET || '',
+    callbackURL: `${env.CLIENT_URL}/api/auth/google/callback`,
+  },
+  async ({ profile }) => {
+    const user = await prisma.user.findUnique({
+      where: { email: profile.emails[0].value },
+    });
+
+    if (user) {
+      return user;
+    }
+
+    const newUser = await prisma.user.create({
+      data: {
+        id: profile.id,
+        email: profile.emails[0].value || '',
+        password: '',
+        name: profile.displayName,
+        image: profile.photos[0].value || '',
+        provider: 'google',
+      },
+    });
+    return newUser;
+  },
+);
+
+authenticator.use(googleStrategy); // name: 'google'
+
+export { authenticator };
+```
