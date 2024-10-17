@@ -72,10 +72,16 @@ const LoginPage = () => {
       <div className="w-[420px] rounded-2xl bg-white p-6">
         <h2 className="text-black-600 mb-5 text-center text-3xl font-extrabold">Login</h2>
         <ValidatedForm validator={loginValidator} method="POST">
-          <div className="flex flex-col gap-y-2">
+          <div className="flex flex-col">
             <TextField htmlFor="email" label="Email" />
             <TextField htmlFor="password" type="password" label="Password" />
-            <Button variant="default" type="submit" name="_action" value="Sign In">
+            <Button
+              variant="default"
+              type="submit"
+              name="_action"
+              value="Sign In"
+              className="mt-4 self-center"
+            >
               Login
             </Button>
             {data?.message && (
