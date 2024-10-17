@@ -428,7 +428,7 @@ const googleStrategy = new GoogleStrategy<User>(
 
     const newUser = await prisma.user.create({
       data: {
-        id: profile.id,
+        // id: profile.id,
         email: profile.emails[0].value || '',
         password: '',
         name: profile.displayName,
@@ -583,4 +583,22 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
+```
+
+#### リダイレクト先（callbackURL）のページを追加
+
+`app/routes/api.auth.google.callback._index/route.tsx`
+
+```tsx
+import { LoaderFunctionArgs } from '@remix-run/node';
+import { authenticator } from '../auth/services/auth.server';
+
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  console.log('auth google callback...');
+  // console.log(request);
+  return await authenticator.authenticate('google', request, {
+    successRedirect: '/',
+    failureRedirect: '/auth/login',
+  });
+};
 ```

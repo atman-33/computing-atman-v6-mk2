@@ -32,12 +32,14 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   try {
     switch (action) {
       case 'Sign In':
+        console.log('Sign In...');
         return await authenticator.authenticate('user-pass', request, {
           successRedirect: '/',
           // failureRedirect: '/auth/login',
         });
 
       case 'Sign In Google':
+        console.log('Sign In Google...');
         return await authenticator.authenticate('google', request);
 
       default:

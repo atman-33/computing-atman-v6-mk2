@@ -62,25 +62,38 @@ const googleStrategy = new GoogleStrategy<User>(
     callbackURL: `${env.CLIENT_URL}/api/auth/google/callback`,
   },
   async ({ profile }) => {
-    const user = await prisma.user.findUnique({
-      where: { email: profile.emails[0].value },
-    });
+    console.log('google strategy start...');
+    // console.log('profile:', JSON.stringify(profile));
 
-    if (user) {
-      return user;
+    try {
+      const user = await prisma.user.findUnique({
+        where: { email: profile.emails[0].value },
+      });
+
+      if (user) {
+        return user;
+      }
+    } catch (e) {
+      console.log(e);
     }
 
-    const newUser = await prisma.user.create({
-      data: {
-        id: profile.id,
-        email: profile.emails[0].value || '',
-        password: '',
-        name: profile.displayName,
-        image: profile.photos[0].value || '',
-        provider: 'google',
-      },
-    });
-    return newUser;
+    try {
+      const newUser = await prisma.user.create({
+        data: {
+          // id: profile.id, // NOTE: MongoDBではIDを自動割付するため利用しない
+          email: profile.emails[0].value || '',
+          password: '',
+          name: profile.displayName,
+          image: profile.photos[0].value || '',
+          provider: 'google',
+        },
+      });
+      return newUser;
+    } catch (e) {
+      console.log(e);
+    }
+
+    throw new Error('DBエラーが発生しています');
   },
 );
 
