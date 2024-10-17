@@ -49,6 +49,9 @@ authenticator.use(formStrategy, 'user-pass');
 
 // ---- GoogleStrategy ---- //
 if (!(env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET && env.CLIENT_URL)) {
+  // console.log(`id: ${env.GOOGLE_CLIENT_ID}`);
+  // console.log(`secret: ${env.GOOGLE_CLIENT_SECRET}`);
+  // console.log(`url: ${env.CLIENT_URL}`);
   throw new Error('GOOGLE_CLIENT_ID、GOOGLE_CLIENT_SECRET、CLIENT_URLが設定されていません。');
 }
 

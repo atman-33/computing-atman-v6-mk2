@@ -7,6 +7,7 @@ import { Alert, AlertDescription, AlertTitle } from '~/components/shadcn/ui/aler
 import { Button } from '~/components/shadcn/ui/button';
 import { TextField } from '../auth/components/text-field';
 import { authenticator } from '../auth/services/auth.server';
+import { GoogleForm } from './google-form';
 import { loginValidator } from './login-validator';
 
 export const meta: MetaFunction = () => {
@@ -22,11 +23,26 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
+  // NOTE:
+  // cloneせずに値を取得すると、action関数とremix-authで2回リクエスト本文（formData）にアクセスすることになってしまいエラーとなる。
+  // Remixではリクエストには1回しかアクセスできないため、リクエストのクローンを作成して、そのクローンをリクエストとして読み取る必要がある。
+  const formData = await request.clone().formData();
+  const action = String(formData.get('_action'));
+
   try {
-    return await authenticator.authenticate('user-pass', request, {
-      successRedirect: '/',
-      // failureRedirect: '/auth/login',
-    });
+    switch (action) {
+      case 'Sign In':
+        return await authenticator.authenticate('user-pass', request, {
+          successRedirect: '/',
+          // failureRedirect: '/auth/login',
+        });
+
+      case 'Sign In Google':
+        return await authenticator.authenticate('google', request);
+
+      default:
+        return null;
+    }
   } catch (e) {
     // NOTE: この記述がないと成功時にリダイレクトできない
     if (e instanceof Response) {
@@ -52,8 +68,8 @@ const LoginPage = () => {
   return (
     <div className="flex h-full flex-col items-center justify-center gap-y-5">
       <div className="w-[420px] rounded-2xl bg-white p-6">
+        <h2 className="text-black-600 mb-5 text-center text-3xl font-extrabold">Login</h2>
         <ValidatedForm validator={loginValidator} method="POST">
-          <h2 className="text-black-600 mb-5 text-center text-3xl font-extrabold">Login</h2>
           <div className="flex flex-col gap-y-2">
             <TextField htmlFor="email" label="Email" />
             <TextField htmlFor="password" type="password" label="Password" />
@@ -69,6 +85,7 @@ const LoginPage = () => {
             )}
           </div>
         </ValidatedForm>
+        <GoogleForm />
       </div>
       <p className="text-gray-600">
         {`Don't have an account? `}
