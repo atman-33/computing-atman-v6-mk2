@@ -89,7 +89,7 @@ model PostTag {
 }
 ```
 
-### 必要なパッケージをインストール
+### パッケージをインストール
 
 ```sh
 npm i @pothos/core @pothos/plugin-prisma @pothos/plugin-relay graphql-scalars
@@ -98,6 +98,19 @@ npm i @pothos/core @pothos/plugin-prisma @pothos/plugin-relay graphql-scalars
 - @pothos/plugin-prisma: prismaの型を利用するために必要
 - @pothos/plugin-relay: ページネーションを実装ために必要
 - graphql-scalars: DateTime型を利用するために必要
+
+```sh
+npm i @pothos/plugin-simple-objects
+```
+
+- Pothos GraphQL スキーマビルダー用のプラグインで、単純なオブジェクト型を定義するプラグイン
+
+> ログイン処理のような簡単な Mutation の場合、戻り値は単純なオブジェクトであることが多く、token のような文字列フィールドのみを持つケースが一般的です。
+> @pothos/plugin-simple-objects を使うと、そうした単純な構造の型を短いコードで定義できます。
+
+```sh
+npm i @pothos/plugin-scope-auth
+```
 
 ### prisma.schemaの設定を変更
 
@@ -119,6 +132,21 @@ npx prisma generate
 
 ### スキーマビルダーを実装
 
+コンテキストを準備する。  
+
+`app/lib/graphql/context.ts`
+
+```ts
+import { User } from '@prisma/client';
+import { type YogaInitialContext } from 'graphql-yoga';
+
+export interface Context extends YogaInitialContext {
+  user?: User;
+}
+```
+
+スキーマビルダーを準備する。  
+
 `app/lib/graphql/builder.ts`
 
 ```ts
@@ -129,6 +157,11 @@ import RelayPlugin from '@pothos/plugin-relay';
 import { Prisma } from '@prisma/client';
 import { DateTimeResolver } from 'graphql-scalars';
 import { prisma } from '~/lib/prisma';
+// eslint-disable-next-line import/no-named-as-default
+import ScopeAuthPlugin from '@pothos/plugin-scope-auth';
+// eslint-disable-next-line import/no-named-as-default
+import PothosSimpleObjectsPlugin from '@pothos/plugin-simple-objects';
+import { Context } from './context';
 
 export const builder = new SchemaBuilder<{
   Scalars: {
@@ -137,12 +170,24 @@ export const builder = new SchemaBuilder<{
       Output: Date;
     };
   };
+  // NOTE: 権限設定
+  AuthScopes: {
+    loggedIn: boolean;
+  };
   Connection: {
     totalCount: number | (() => number | Promise<number>);
   };
   PrismaTypes: PrismaTypes;
+  // NOTE: ログインユーザー情報のコンテキスト
+  Context: Context;
 }>({
-  plugins: [PrismaPlugin, RelayPlugin],
+  plugins: [ScopeAuthPlugin, PrismaPlugin, RelayPlugin, PothosSimpleObjectsPlugin],
+  scopeAuth: {
+    authorizeOnSubscribe: true,
+    authScopes: async (ctx) => ({
+      loggedIn: !!ctx.user,
+    }),
+  },
   relay: {},
   prisma: {
     client: prisma,
@@ -156,7 +201,7 @@ builder.mutationType();
 builder.addScalarType('DateTime', DateTimeResolver, {});
 ```
 
-### Postのオペレーションを実装
+### Postのリゾルバを実装
 
 #### GraphQLノードを実装
 
@@ -246,6 +291,184 @@ builder.queryField('posts', (t) =>
     cursor: 'id',
     resolve: (query) => prisma.post.findMany({ ...query }),
     totalCount: () => prisma.post.count(),
+  }),
+);
+```
+
+#### ミューテーションフィールドを実装
+
+DTOを準備する。  
+
+`app/lib/graphql/schema/post/dto/input/create-post-input.dto.ts`  
+
+```ts
+import { builder } from '~/lib/graphql/builder';
+import { PostStatus } from '../../post.node';
+
+export const CreatePostInput = builder.inputType('CreatePostInput', {
+  fields: (t) => ({
+    title: t.string({ required: true }),
+    emoji: t.string({ required: true }),
+    content: t.string({ required: true }),
+    status: t.field({ type: PostStatus, required: true }),
+    tagIds: t.stringList({ required: false }),
+  }),
+});
+```
+
+`app/lib/graphql/schema/post/dto/input/update-post-input.dto.ts`  
+
+```ts
+import { builder } from '~/lib/graphql/builder';
+import { PostStatus } from '../../post.node';
+
+export const UpdatePostInput = builder.inputType('UpdatePostInput', {
+  fields: (t) => ({
+    id: t.string({ required: true }),
+    title: t.string({ required: true }),
+    emoji: t.string({ required: true }),
+    content: t.string({ required: true }),
+    status: t.field({ type: PostStatus, required: true }),
+    tagIds: t.stringList({ required: false }),
+  }),
+});
+```
+
+`app/lib/graphql/schema/post/dto/input/delete-post-input.dto.ts`  
+
+```ts
+import { builder } from '~/lib/graphql/builder';
+
+export const DeletePostInput = builder.inputType('DeletePostInput', {
+  fields: (t) => ({
+    id: t.string({ required: true }),
+  }),
+});
+```
+
+ミューテーションフィールドを準備する。  
+
+`app/lib/graphql/schema/post/post.mutation.ts`
+
+```ts
+import { decodeGlobalID } from '@pothos/plugin-relay';
+import { builder } from '~/lib/graphql/builder';
+import { prisma } from '~/lib/prisma';
+import { CreatePostInput } from './dto/input/create-post-input.dto';
+import { DeletePostInput } from './dto/input/delete-post-input.dto';
+import { UpdatePostInput } from './dto/input/update-post-input.dto';
+
+builder.mutationField('createPost', (t) =>
+  t.prismaField({
+    type: 'Post',
+    nullable: false,
+    args: {
+      input: t.arg({
+        type: CreatePostInput,
+        required: true,
+      }),
+    },
+    authScopes: { loggedIn: true },
+    resolve: async (query, _, { input }, ctx) => {
+      if (!ctx.user) {
+        throw new Error('required ctx.user');
+      }
+
+      const createdPost = await prisma.post.create({
+        ...query,
+        data: {
+          title: input.title,
+          emoji: input.emoji,
+          content: input.content,
+          status: input.status,
+          authorId: ctx.user.id,
+        },
+      });
+
+      if (input.tagIds && input.tagIds.length > 0) {
+        const postTagsData = input.tagIds.map((tagId) => ({
+          postId: createdPost.id,
+          tagId,
+        }));
+
+        await prisma.postTag.createMany({
+          data: postTagsData,
+        });
+      }
+
+      return createdPost;
+    },
+  }),
+);
+
+builder.mutationField('updatePost', (t) =>
+  t.prismaField({
+    type: 'Post',
+    nullable: true,
+    args: {
+      input: t.arg({
+        type: UpdatePostInput,
+        required: true,
+      }),
+    },
+    authScopes: { loggedIn: true },
+    resolve: async (query, _, { input }) => {
+      const { id: rawId } = decodeGlobalID(input.id);
+      const updatedPost = await prisma.post.update({
+        ...query,
+        where: {
+          id: rawId,
+        },
+        data: {
+          title: input.title,
+          emoji: input.emoji,
+          content: input.content,
+          status: input.status,
+        },
+      });
+
+      if (input.tagIds) {
+        await prisma.postTag.deleteMany({
+          where: {
+            postId: rawId,
+          },
+        });
+
+        if (input.tagIds.length > 0) {
+          const postTagsData = input.tagIds.map((tagId) => ({
+            postId: rawId,
+            tagId,
+          }));
+
+          await prisma.postTag.createMany({
+            data: postTagsData,
+          });
+        }
+      }
+
+      return updatedPost;
+    },
+  }),
+);
+
+builder.mutationField('deletePost', (t) =>
+  t.prismaField({
+    type: 'Post',
+    nullable: true,
+    args: {
+      input: t.arg({
+        type: DeletePostInput,
+        required: true,
+      }),
+    },
+    authScopes: { loggedIn: true },
+    resolve: async (query, _, { input }) => {
+      const { id: rawId } = decodeGlobalID(input.id);
+      return await prisma.post.delete({
+        ...query,
+        where: { id: rawId },
+      });
+    },
   }),
 );
 ```

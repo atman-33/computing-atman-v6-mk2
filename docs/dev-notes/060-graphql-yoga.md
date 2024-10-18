@@ -4,7 +4,7 @@
 
 ## ステップ
 
-### インストール
+### パッケージをインストール
 
 ```sh
 npm i graphql graphql-yoga
