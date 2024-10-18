@@ -1,3 +1,21 @@
+# Pothosセットアップ（GraphQLスキーマビルダー）
+
+## 参考URL
+
+- [PrismaとPothosでコード生成を使いながら効率よくGraphQLサーバーを作ってみる](https://zenn.dev/poyochan/articles/9f22799853784d#pothos%E3%81%AE%E3%82%B9%E3%82%AD%E3%83%BC%E3%83%9E%E3%83%93%E3%83%AB%E3%83%80)
+
+## ステップ
+
+### Prismaスキーマ修正
+
+`prisma/schema.prisma`
+
+- PostStatusを追加
+- Postを追加
+- Tagを追加
+- PostTagを追加
+
+```prisma
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
@@ -69,3 +87,4 @@ model PostTag {
   // 複合主キーを設定
   @@unique(fields: [postId, tagId])
 }
+```
