@@ -483,7 +483,7 @@ import './post.mutation';
 import './post.query';
 ```
 
-> 上記と同様に、tagのリゾルバも実装しておく。
+> 上記と同様に、tagとuserのリゾルバも実装しておく。
 
 ### GraphQLスキーマを作成
 
@@ -494,6 +494,7 @@ import { builder } from '../builder';
 
 import './post';
 import './tag';
+import './user';
 
 export const schema = builder.toSchema();
 ```
