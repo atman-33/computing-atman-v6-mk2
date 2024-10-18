@@ -203,9 +203,9 @@ builder.addScalarType('DateTime', DateTimeResolver, {});
 
 ### Postのリゾルバを実装
 
-#### GraphQLノードを実装
+#### GraphQLモデル（ノード、オブジェクト）を実装
 
-`app/lib/graphql/schema/post/post.node.ts`
+`app/lib/graphql/schema/post/post.model.ts`
 
 ```ts
 import { builder } from '~/lib/graphql/builder';
@@ -303,7 +303,7 @@ DTOを準備する。
 
 ```ts
 import { builder } from '~/lib/graphql/builder';
-import { PostStatus } from '../../post.node';
+import { PostStatus } from '../../post.model';
 
 export const CreatePostInput = builder.inputType('CreatePostInput', {
   fields: (t) => ({
@@ -320,7 +320,7 @@ export const CreatePostInput = builder.inputType('CreatePostInput', {
 
 ```ts
 import { builder } from '~/lib/graphql/builder';
-import { PostStatus } from '../../post.node';
+import { PostStatus } from '../../post.model';
 
 export const UpdatePostInput = builder.inputType('UpdatePostInput', {
   fields: (t) => ({
@@ -471,4 +471,55 @@ builder.mutationField('deletePost', (t) =>
     },
   }),
 );
+```
+
+#### import用indexファイルを作成
+
+`app/lib/graphql/schema/post/index.ts`
+
+```ts
+import './post.model';
+import './post.mutation';
+import './post.query';
+```
+
+> 上記と同様に、tagのリゾルバも実装しておく。
+
+### GraphQLスキーマを作成
+
+`app/lib/graphql/schema/index.ts`
+
+```ts
+import { builder } from '../builder';
+
+import './post';
+import './tag';
+
+export const schema = builder.toSchema();
+```
+
+### GraphQL YogaからGraphQLスキーマを読み込み
+
+`app/routes/api.graphql/route.ts`
+
+```ts
+import { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
+import { createYoga } from 'graphql-yoga';
+import { schema } from '~/lib/graphql/schema';
+
+// NOTE: createYogaで生成したインスタンスはシングルトンとして利用される。
+const yoga = createYoga({
+  schema, // スキーマとリゾルバーを定義
+  graphqlEndpoint: '/api/graphql',
+});
+
+export async function loader({ request, context }: LoaderFunctionArgs) {
+  const response = await yoga.handleRequest(request, context);
+  return new Response(response.body, response);
+}
+
+export async function action({ request, context }: ActionFunctionArgs) {
+  const response = await yoga.handleRequest(request, context);
+  return new Response(response.body, response);
+}
 ```

@@ -1,5 +1,5 @@
 import { builder } from '~/lib/graphql/builder';
-import { PostStatus } from '../../post.node';
+import { PostStatus } from '../../post.model';
 
 export const CreatePostInput = builder.inputType('CreatePostInput', {
   fields: (t) => ({

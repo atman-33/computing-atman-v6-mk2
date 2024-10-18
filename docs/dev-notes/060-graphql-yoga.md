@@ -41,12 +41,12 @@ const yoga = createYoga({
   graphqlEndpoint: '/api/graphql', // GraphQL のエンドポイントを指定
 });
 
-export async function action({ request, context }: ActionFunctionArgs) {
+export async function loader({ request, context }: LoaderFunctionArgs) {
   const response = await yoga.handleRequest(request, context);
   return new Response(response.body, response);
 }
 
-export async function loader({ request, context }: LoaderFunctionArgs) {
+export async function action({ request, context }: ActionFunctionArgs) {
   const response = await yoga.handleRequest(request, context);
   return new Response(response.body, response);
 }
