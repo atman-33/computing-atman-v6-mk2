@@ -587,7 +587,7 @@ export default LoginPage;
 
 #### リダイレクト先（callbackURL）のページを追加
 
-`app/routes/api.auth.google.callback._index/route.tsx`
+`app/routes/api.auth.google.callback/route.tsx`
 
 ```tsx
 import { LoaderFunctionArgs } from '@remix-run/node';
