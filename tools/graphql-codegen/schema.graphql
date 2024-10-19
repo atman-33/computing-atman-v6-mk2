@@ -1,0 +1,135 @@
+input CreatePostInput {
+  content: String!
+  emoji: String!
+  status: PostStatus!
+  tagIds: [String!]
+  title: String!
+}
+
+input CreateTagInput {
+  image: String
+  name: String!
+}
+
+"""
+A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
+"""
+scalar DateTime
+
+input DeletePostInput {
+  id: String!
+}
+
+input DeleteTagInput {
+  id: String!
+}
+
+input GetPostArgs {
+  id: String!
+}
+
+input GetTagArgs {
+  id: String!
+}
+
+type Mutation {
+  createPost(input: CreatePostInput!): Post!
+  createTag(input: CreateTagInput!): Tag!
+  deletePost(input: DeletePostInput!): Post
+  deleteTag(input: DeleteTagInput!): Tag
+  updatePost(input: UpdatePostInput!): Post
+  updateTag(input: UpdateTagInput!): Tag
+}
+
+interface Node {
+  id: ID!
+}
+
+type PageInfo {
+  endCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+}
+
+type Post implements Node {
+  author: User
+  content: String
+  createdAt: DateTime
+  emoji: String
+  id: ID!
+  status: PostStatus
+  tags: [PostTag!]
+  title: String
+  updatedAt: DateTime
+}
+
+enum PostStatus {
+  DRAFT
+  PUBLIC
+}
+
+type PostTag {
+  id: String
+  post: Post
+  tag: Tag
+}
+
+type Query {
+  node(id: ID!): Node
+  nodes(ids: [ID!]!): [Node]!
+  post(args: GetPostArgs!): Post
+  posts(after: String, before: String, first: Int, last: Int): QueryPostsConnection
+  tag(args: GetTagArgs!): Tag
+  tags: [Tag!]
+}
+
+type QueryPostsConnection {
+  edges: [QueryPostsConnectionEdge]
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type QueryPostsConnectionEdge {
+  cursor: String!
+  node: Post
+}
+
+type Tag {
+  id: String
+  image: String
+  name: String
+}
+
+input UpdatePostInput {
+  content: String!
+  emoji: String!
+  id: String!
+  status: PostStatus!
+  tagIds: [String!]
+  title: String!
+}
+
+input UpdateTagInput {
+  id: String!
+  image: String
+  name: String!
+}
+
+type User implements Node {
+  email: String
+  id: ID!
+  name: String
+  posts(after: String, before: String, first: Int, last: Int): UserPostsConnection
+}
+
+type UserPostsConnection {
+  edges: [UserPostsConnectionEdge]
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type UserPostsConnectionEdge {
+  cursor: String!
+  node: Post
+}
