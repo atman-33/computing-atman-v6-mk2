@@ -1,52 +1,3 @@
-# GraphQL request セットアップ
-
-## ステップ
-
-### インストール
-
-```sh
-npm i graphql-request
-```
-
-### GraphQL API URLを環境変数に追加
-
-`.env`
-
-```sh
-# API GraphQL URL
-API_GQL_URL='http://localhost:3000/api/graphql'
-```
-
-`app/config/env.ts`
-
-### Clientを作成
-
-`app/lib/graphql-client.ts`
-
-```ts
-import { GraphQLClient } from 'graphql-request';
-import { env } from '~/config/env';
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const initializeClient = async (request: Request | undefined) => {
-  const client = new GraphQLClient(env.API_GQL_URL, {
-    fetch: fetch,
-  });
-
-  return client;
-};
-```
-
-### データ取得例
-
-`app/routes/_.poc.graphql-test._index/route.tsx`
-
-**注意点**  
-
-- GraphQLコード（下記の例では`getTagsGql`）を記載後、graphql-codegenを実行して、自動コードを更新すること。
-- `useLoaderData`で取得したデータは、正常なデータとErrorの型のどちらか判断付かない状態にあるため、先にErrorの型の場合は判定しておくとよい。
-
-```tsx
 import { json, useLoaderData } from '@remix-run/react';
 import { ClientError } from 'graphql-request';
 import {
@@ -132,4 +83,3 @@ const GraphqlTestPage = () => {
 };
 
 export default GraphqlTestPage;
-```
