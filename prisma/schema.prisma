@@ -8,9 +8,18 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator pothos {
+  provider = "prisma-pothos-types"
+}
+
 datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")
+}
+
+enum PostStatus {
+  DRAFT
+  PUBLIC
 }
 
 model User {
@@ -22,4 +31,45 @@ model User {
   provider  String   @default("Credentials")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  Post Post[]
+}
+
+model Post {
+  id      String     @id @default(auto()) @map("_id") @db.ObjectId
+  title   String
+  emoji   String
+  content String
+  tags    PostTag[]
+  status  PostStatus @default(DRAFT)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  authorId String @db.ObjectId
+  author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model Tag {
+  id    String  @id @default(auto()) @map("_id") @db.ObjectId
+  name  String  @unique
+  image String?
+
+  // Postとのリレーション
+  posts PostTag[]
+}
+
+model PostTag {
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  postId String @db.ObjectId
+  tagId  String @db.ObjectId
+
+  // Postとのリレーション
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  // Tagとのリレーション
+  tag Tag @relation(fields: [tagId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  // 複合主キーを設定
+  @@unique(fields: [postId, tagId])
 }
