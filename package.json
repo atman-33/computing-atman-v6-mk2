@@ -24,6 +24,9 @@
     "build-storybook": "storybook build",
     "test": "jest",
     "---- CI SECTION ----": "---- ---- ---- ---- ----",
+    "ci:lint": "npm run lint",
+    "ci:build": "npx env-cmd -f .env.example npm run build",
+    "ci:test": "npm run test",
     "---- CD SECTION ----": "---- ---- ---- ---- ----",
     "cd:build": "npm run build",
     "cd:start": "npm run start"
