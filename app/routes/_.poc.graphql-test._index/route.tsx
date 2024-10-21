@@ -9,8 +9,8 @@ import {
   TableHeader,
   TableRow,
 } from '~/components/shadcn/ui/table';
-import { graphql } from '~/lib/graphql/@generated';
 import { initializeClient } from '~/lib/graphql-client';
+import { graphql } from '~/lib/graphql/@generated';
 
 const getTagsGql = graphql(`
   query getTags {
@@ -48,6 +48,7 @@ const GraphqlTestPage = () => {
   const tags = useLoaderData<typeof loader>();
 
   if (!tags || 'errorType' in tags) {
+    console.log(tags);
     return <div>Error: {tags?.error?.message || 'Unknown error'}</div>;
   }
 
