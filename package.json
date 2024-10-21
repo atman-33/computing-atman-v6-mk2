@@ -21,7 +21,11 @@
     "graphql:codegen": "graphql-codegen -c tools/graphql-codegen/codegen.ts --watch",
     "---- TEST SECTION ----": "---- ---- ---- ---- ----",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "---- CI SECTION ----": "---- ---- ---- ---- ----",
+    "---- CD SECTION ----": "---- ---- ---- ---- ----",
+    "cd:build": "npm run build",
+    "cd:start": "npm run start"
   },
   "dependencies": {
     "@pothos/core": "^4.3.0",
