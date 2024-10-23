@@ -7,3 +7,7 @@ builder.prismaObject('Tag', {
     image: t.exposeString('image'),
   }),
 });
+
+export const loadTagModel = () => {
+  console.log('Tag model loaded');
+};

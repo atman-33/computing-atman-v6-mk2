@@ -237,7 +237,16 @@ builder.prismaNode('Post', {
     tags: t.relation('tags'),
   }),
 });
+
+// NOTE:
+// このファイルの処理をロードする際は、loadPostModelを実行すること。
+// 空の関数ではビルド時に含まれなくなるため、console.logなど副作用を発生させる必要がある。
+export const loadPostModel = () => {
+  console.log('Post model loaded');
+};
 ```
+
+> ビルド時に考慮されるように、`console.log`など副作用を持つコードを含んだ読み込み用関数を準備すること。
 
 #### クエリフィールドを実装
 
@@ -293,6 +302,10 @@ builder.queryField('posts', (t) =>
     totalCount: () => prisma.post.count(),
   }),
 );
+
+export const loadPostQuery = () => {
+  console.log('Post query loaded');
+};
 ```
 
 #### ミューテーションフィールドを実装
@@ -471,6 +484,10 @@ builder.mutationField('deletePost', (t) =>
     },
   }),
 );
+
+export const loadPostMutation = () => {
+  console.log('Post mutation loaded');
+};
 ```
 
 #### import用indexファイルを作成
@@ -478,9 +495,15 @@ builder.mutationField('deletePost', (t) =>
 `app/lib/graphql/schema/post/index.ts`
 
 ```ts
-import './post.model';
-import './post.mutation';
-import './post.query';
+import { loadPostModel } from './post.model';
+import { loadPostMutation } from './post.mutation';
+import { loadPostQuery } from './post.query';
+
+export const loadPost = () => {
+  loadPostModel();
+  loadPostMutation();
+  loadPostQuery();
+};
 ```
 
 > 上記と同様に、tagとuserのリゾルバも実装しておく。
@@ -491,10 +514,14 @@ import './post.query';
 
 ```ts
 import { builder } from '../builder';
+import { loadPost } from './post';
+import { loadTag } from './tag';
+import { loadUser } from './user';
 
-import './post';
-import './tag';
-import './user';
+// 各スキーマを読み込み
+loadPost();
+loadTag();
+loadUser();
 
 export const schema = builder.toSchema();
 ```

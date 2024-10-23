@@ -31,3 +31,7 @@ builder.queryField('posts', (t) =>
     totalCount: () => prisma.post.count(),
   }),
 );
+
+export const loadPostQuery = () => {
+  console.log('Post query loaded');
+};

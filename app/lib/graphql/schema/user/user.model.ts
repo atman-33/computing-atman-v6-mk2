@@ -13,3 +13,7 @@ builder.prismaNode('User', {
     }),
   }),
 });
+
+export const loadUserModel = () => {
+  console.log('User Model loaded');
+};
