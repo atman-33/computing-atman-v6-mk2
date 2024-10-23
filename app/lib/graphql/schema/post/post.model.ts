@@ -27,3 +27,10 @@ builder.prismaNode('Post', {
     tags: t.relation('tags'),
   }),
 });
+
+// NOTE:
+// このファイルの処理をロードする際は、loadPostModelを実行すること。
+// 空の関数ではビルド時に含まれなくなるため、console.logなど副作用を発生させる必要がある。
+export const loadPostModel = () => {
+  console.log('Post model loaded');
+};

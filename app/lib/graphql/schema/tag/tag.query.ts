@@ -30,3 +30,7 @@ builder.queryField('tags', (t) =>
     resolve: async (query) => await prisma.tag.findMany({ ...query }),
   }),
 );
+
+export const loadTagQuery = () => {
+  console.log('Tag query loaded');
+};

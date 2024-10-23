@@ -3,6 +3,8 @@ import { createYoga } from 'graphql-yoga';
 import { schema } from '~/lib/graphql/schema';
 import { authenticator } from '../auth/services/auth.server';
 
+// console.log(printSchema(schema));  // デバッグ用（スキーマ情報確認）
+
 // NOTE: createYogaで生成したインスタンスはシングルトンとして利用される。
 const yoga = createYoga({
   schema, // スキーマとリゾルバーを定義

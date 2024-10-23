@@ -72,3 +72,7 @@ builder.mutationField('deleteTag', (t) =>
     },
   }),
 );
+
+export const loadTagMutation = () => {
+  console.log('Tag mutation loaded');
+};

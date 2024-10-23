@@ -118,3 +118,7 @@ builder.mutationField('deletePost', (t) =>
     },
   }),
 );
+
+export const loadPostMutation = () => {
+  console.log('Post mutation loaded');
+};
