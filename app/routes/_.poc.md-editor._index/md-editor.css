@@ -1,5 +1,4 @@
-/* 全体の基本設定 */
-body {
+全体の基本設定 body {
   font-family: Arial, sans-serif;
   line-height: 1.8;
   margin: 0;
@@ -97,10 +96,50 @@ blockquote {
 
 /* コードブロック */
 code > pre {
-  padding: 1em;
+  padding: 1em 1.2em;
   overflow-x: auto;
   border-radius: 8px;
   margin: 1em 0;
+}
+/* コードブロック - shiki transformers - */
+.line {
+  display: inline;
+  padding-bottom: 0;
+}
+.diff {
+  display: inline-block;
+  width: 100%;
+}
+.diff.add {
+  background-color: #0505;
+}
+.diff.add::before {
+  content: '+';
+  color: green;
+  margin-right: 8px; /* +とテキストの間のスペース調整 */
+}
+.diff.remove {
+  background-color: #8005;
+}
+.diff.remove::before {
+  content: '-';
+  color: red;
+  margin-right: 8px; /* -とテキストの間のスペース調整 */
+}
+.highlighted {
+  display: inline-block;
+  width: 100%;
+  background-color: #555;
+}
+.diff:before {
+  position: absolute;
+  left: 40px;
+}
+.has-focused .line {
+  filter: blur(0.095rem);
+}
+.has-focused .focused {
+  filter: blur(0);
 }
 
 /* テーブル */

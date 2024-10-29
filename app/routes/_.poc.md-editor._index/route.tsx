@@ -1,9 +1,14 @@
 import 'easymde/dist/easymde.min.css';
 import './md-editor.css';
 
+import {
+  transformerNotationDiff,
+  transformerNotationFocus,
+  transformerNotationHighlight,
+} from '@shikijs/transformers';
 import { Marked } from 'marked';
 import { markedHighlight } from 'marked-highlight';
-import React, { lazy, Suspense, useEffect, useState } from 'react';
+import React, { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import { highlighter } from '~/lib/highlighter';
 
 // NOTE: RemixはSSRのため、CSR用コンポーネントはdynamic importする必要あり
@@ -14,18 +19,30 @@ const SimpleMde = lazy(async () => {
 const MemoizedMed = React.memo(SimpleMde);
 
 const MarkdownEditorPage = () => {
-  const marked = new Marked(
-    {
-      gfm: true,
-      breaks: true,
-    },
-    markedHighlight({
-      highlight(code, lang) {
-        // console.log(`lang: ${lang}`);
-        const language = highlighter.getLoadedLanguages().includes(lang) ? lang : 'plaintext';
-        return highlighter.codeToHtml(code, { lang: language, theme: 'github-dark' });
-      },
-    }),
+  const marked = useMemo(
+    () =>
+      new Marked(
+        {
+          gfm: true,
+          breaks: true,
+        },
+        markedHighlight({
+          highlight(code, lang) {
+            // console.log(`lang: ${lang}`);
+            const language = highlighter.getLoadedLanguages().includes(lang) ? lang : 'plaintext';
+            return highlighter.codeToHtml(code, {
+              lang: language,
+              theme: 'github-dark',
+              transformers: [
+                transformerNotationDiff(),
+                transformerNotationHighlight(),
+                transformerNotationFocus(),
+              ],
+            });
+          },
+        }),
+      ),
+    [],
   );
 
   const [markdownValue, setMarkdownValue] = useState('Initial value');
@@ -39,8 +56,7 @@ const MarkdownEditorPage = () => {
         setPreviewHtml(DOMPurify.default.sanitize(markedValue));
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [markdownValue]);
+  }, [markdownValue, marked]);
 
   const handleMarkdownChange = (value: string) => {
     setMarkdownValue(value);
