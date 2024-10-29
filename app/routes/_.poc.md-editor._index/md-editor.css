@@ -96,23 +96,11 @@ blockquote {
 }
 
 /* コードブロック */
-pre,
-code {
-  font-family: Consolas, Monaco, 'Courier New', monospace;
-  font-size: 0.95em;
-}
-
-pre {
-  background-color: #eee;
-  color: #f4f4f4;
+code > pre {
   padding: 1em;
   overflow-x: auto;
   border-radius: 8px;
   margin: 1em 0;
-}
-
-code {
-  color: #c7254e;
 }
 
 /* テーブル */

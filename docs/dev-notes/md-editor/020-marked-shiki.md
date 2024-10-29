@@ -1,3 +1,64 @@
+# マークダウンにshiki（シンタックスハイライト）を適用する方法
+
+## 参考URL
+
+- [marked-highlight](https://www.npmjs.com/package/marked-highlight)
+- [Shiki 式 yntax highlighter](https://shiki.matsu.io/)
+- [シンタックスハイライター`Shiki`の紹介](https://zenn.dev/funteractiveinc/articles/4ed268557a4796#transformers)
+
+## ステップ
+
+### ライブラリをインストール
+
+```sh
+npm i -D shiki
+npm i marked-highlight
+```
+
+### highlighterを準備
+
+`app/lib/highlighter.ts`
+
+```ts
+import { createHighlighter } from 'shiki';
+
+export const highlighter = await createHighlighter({
+  themes: ['github-dark'],
+  langs: [
+    'plaintext',
+    'text',
+    'txt',
+    'csv',
+    'sh',
+    'shell',
+    'powershell',
+    'bat',
+    'html',
+    'xml',
+    'css',
+    'sql',
+    'graphql',
+    'javascript',
+    'typescript',
+    'js',
+    'jsx',
+    'ts',
+    'tsx',
+    'csharp',
+    'cs',
+    'vb',
+  ],
+});
+```
+
+- アプリ内で利用するテーマやプログラミング言語は、このhighlighterで予め定義しておく。
+- マークダウンからHtmlに変換する際、ここで定義したテーマや言語から選択して適用する。
+
+### Markedにshiki（シンタックスハイライト）を適用
+
+`app/routes/_.poc.md-editor._index/route.tsx`
+
+```tsx
 import 'easymde/dist/easymde.min.css';
 import './md-editor.css';
 
@@ -63,3 +124,6 @@ const MarkdownEditorPage = () => {
 };
 
 export default MarkdownEditorPage;
+```
+
+- `new Marked(...`でマークダウン変換用のインスタンスを生成する際に、ハイライト変換を仕込んでおく（`marked-highlight`ライブラリを利用）。
