@@ -54,6 +54,26 @@ export const highlighter = await createHighlighter({
 - アプリ内で利用するテーマやプログラミング言語は、このhighlighterで予め定義しておく。
 - マークダウンからHtmlに変換する際、ここで定義したテーマや言語から選択して適用する。
 
+**上記のhighlighterはトップレベルでawaitを利用しているため、Viteでbuildするとエラーとなる。**そのため、下記のようにvite configを設定しておく。  
+
+`vite.config.ts`
+
+```ts
+// ...
+export default ({ mode }: { mode: string }) => {
+  // ...
+  return defineConfig({
+    // ...
+    esbuild: {
+      supported: {
+        'top-level-await': true,
+      },
+    },
+  });
+};
+
+```
+
 ### Markedにshiki（シンタックスハイライト）を適用
 
 `app/routes/_.poc.md-editor._index/route.tsx`
