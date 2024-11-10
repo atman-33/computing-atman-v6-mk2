@@ -6,9 +6,11 @@ import {
   transformerNotationFocus,
   transformerNotationHighlight,
 } from '@shikijs/transformers';
+import { uploadFile } from '@uploadcare/upload-client';
 import { Marked } from 'marked';
 import { markedHighlight } from 'marked-highlight';
 import React, { lazy, Suspense, useEffect, useMemo, useState } from 'react';
+import { clientEnv } from '~/config/client-env';
 import { highlighter } from '~/lib/highlighter';
 
 // NOTE: RemixはSSRのため、CSR用コンポーネントはdynamic importする必要あり
@@ -62,10 +64,38 @@ const MarkdownEditorPage = () => {
     setMarkdownValue(value);
   };
 
+  const imageUploadFunction = async (file: File) => {
+    console.log(file.name);
+    const result = await uploadFile(file, {
+      publicKey: clientEnv.VITE_UPLOADCARE_PUBLIC_KEY,
+      store: 'auto',
+      metadata: {
+        subsystem: 'js-client',
+        note: 'test',
+      },
+    });
+
+    // アップロードした画像のURLを取得してマークダウンに埋め込む
+    setMarkdownValue((pre) => {
+      return pre + '\n\n' + `![image](https://ucarecdn.com/${result.uuid}/-/preview/233x96/)`;
+    });
+  };
+
+  const autoUploadImage = useMemo(() => {
+    return {
+      uploadImage: true,
+      imageUploadFunction,
+    };
+  }, []);
+
   return (
     <>
       <Suspense fallback={<div>Loading...</div>}>
-        <MemoizedMed value={markdownValue} onChange={handleMarkdownChange} />
+        <MemoizedMed
+          value={markdownValue}
+          onChange={handleMarkdownChange}
+          options={autoUploadImage}
+        />
         <div>
           <h2>Preview</h2>
           <div
