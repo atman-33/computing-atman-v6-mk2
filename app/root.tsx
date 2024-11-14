@@ -1,7 +1,22 @@
-import type { LinksFunction } from '@remix-run/node';
-import { Links, Meta, Outlet, Scripts, ScrollRestoration } from '@remix-run/react';
-
 import './tailwind.css';
+
+import type { LinksFunction, LoaderFunctionArgs } from '@remix-run/node';
+import {
+  json,
+  Links,
+  Meta,
+  Outlet,
+  Scripts,
+  ScrollRestoration,
+  useLoaderData,
+} from '@remix-run/react';
+import { useMemo } from 'react';
+import { getThemeFromCookies } from './utils/theme.server';
+
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const theme = await getThemeFromCookies(request);
+  return json({ theme });
+};
 
 export const links: LinksFunction = () => [
   { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
@@ -17,8 +32,16 @@ export const links: LinksFunction = () => [
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
+  const { theme } = useLoaderData<typeof loader>();
+
+  const htmlProps = useMemo(() => {
+    return {
+      className: theme === 'system' ? undefined : theme,
+    };
+  }, [theme]);
+
   return (
-    <html lang="ja">
+    <html lang="ja" {...htmlProps}>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />

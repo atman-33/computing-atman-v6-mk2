@@ -11,6 +11,7 @@
 | Zod                  | バリデーションライブラリ |
 | Storybook            | UIコンポーネント開発環境 |
 | Remix Validated Form | Formライブラリ           |
+| react-icons          | アイコンライブラリ       |
 
 ### バックエンド（server）
 
