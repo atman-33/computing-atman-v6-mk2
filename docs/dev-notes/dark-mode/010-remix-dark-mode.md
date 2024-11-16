@@ -46,7 +46,7 @@ export const getSystemTheme = () => {
 ```tsx
 import './tailwind.css';
 
-import type { LinksFunction, LoaderFunctionArgs } from '@remix-run/node';
+import type { LoaderFunctionArgs } from '@remix-run/node';
 import {
   json,
   Links,
@@ -64,19 +64,6 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const theme = await getThemeFromCookie(request);
   return json({ theme });
 };
-
-export const links: LinksFunction = () => [
-  { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
-  {
-    rel: 'preconnect',
-    href: 'https://fonts.gstatic.com',
-    crossOrigin: 'anonymous',
-  },
-  {
-    rel: 'stylesheet',
-    href: 'https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap',
-  },
-];
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const { theme } = useLoaderData<typeof loader>();
