@@ -1,8 +1,8 @@
 import { ActionFunctionArgs, json, LoaderFunctionArgs } from '@remix-run/node';
-import { getThemeFromCookies, themeCookie } from '~/utils/theme.server';
+import { getThemeFromCookie, themeCookie } from '~/routes/resources.theme/services/theme.server';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const currentTheme = await getThemeFromCookies(request);
+  const currentTheme = await getThemeFromCookie(request);
   return json({ currentTheme });
 };
 

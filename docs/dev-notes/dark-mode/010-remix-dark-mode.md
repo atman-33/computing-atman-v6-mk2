@@ -10,7 +10,7 @@
 
 ### Cookieに保持したテーマ情報を取得する関数を準備
 
-`app/utils/theme.server.ts`
+`app/routes/resources.theme/services/theme.server.ts`
 
 ```ts
 import { createCookie } from '@remix-run/node';
@@ -20,9 +20,19 @@ export const themeCookie = createCookie('theme', {
   secure: process.env.NODE_ENV === 'production',
 });
 
-export const getThemeFromCookies = async (request: Request): Promise<string> => {
+export const getThemeFromCookie = async (request: Request): Promise<string> => {
   const theme = await themeCookie.parse(request.headers.get('Cookie'));
   return theme || 'system';
+};
+```
+
+### OSのシステムテーマを取得する関数を準備
+
+`app/routes/resources.theme/services/system-theme.client.ts`
+
+```ts
+export const getSystemTheme = () => {
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 };
 ```
 
@@ -31,7 +41,7 @@ export const getThemeFromCookies = async (request: Request): Promise<string> => 
 `app/root.tsx`
 
 - loaderを追加。ここでCookieに取得しているテーマを取得している。
-- Layoutでテーマを設定。htmlタグのclassに設定している。
+- Layoutでテーマを設定。htmlタグのclassにテーマを設定している。
 
 ```tsx
 import './tailwind.css';
@@ -47,10 +57,11 @@ import {
   useLoaderData,
 } from '@remix-run/react';
 import { useMemo } from 'react';
-import { getThemeFromCookies } from './utils/theme.server';
+import { getSystemTheme } from './routes/resources.theme/services/system-theme.client';
+import { getThemeFromCookie } from './routes/resources.theme/services/theme.server';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const theme = await getThemeFromCookies(request);
+  const theme = await getThemeFromCookie(request);
   return json({ theme });
 };
 
@@ -71,8 +82,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
   const { theme } = useLoaderData<typeof loader>();
 
   const htmlProps = useMemo(() => {
+    let currentTheme = theme;
+    if (theme === 'system') {
+      currentTheme = getSystemTheme();
+    }
+
     return {
-      className: theme === 'system' ? undefined : theme,
+      className: currentTheme,
     };
   }, [theme]);
 
@@ -100,11 +116,16 @@ export default function App() {
 
 ### 変更されたテーマを設定するためのresource routeを準備
 
-`app/routes/preferences.theme.ts`
+`app/routes/resources.theme/route.ts`
 
 ```ts
-import { ActionFunctionArgs } from '@remix-run/node';
-import { themeCookie } from '~/utils/theme.server';
+import { ActionFunctionArgs, json, LoaderFunctionArgs } from '@remix-run/node';
+import { getThemeFromCookie, themeCookie } from '~/routes/resources.theme/services/theme.server';
+
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const currentTheme = await getThemeFromCookie(request);
+  return json({ currentTheme });
+};
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const form = await request.formData();
@@ -124,31 +145,47 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 };
 ```
 
-### テーマを変更するトグルボタンを準備
+### テーマを変更するドロップダウンメニューを準備
 
-`app/routes/_landing/components/toggle-theme-button.tsx`
+`app/routes/_landing/components/theme-dropdown.tsx`
 
 ```tsx
-import { Form } from '@remix-run/react';
-import { FaMoon, FaSun } from 'react-icons/fa';
-const ToggleThemeButton = ({ theme }: { theme: string }) => {
-  const themeToToggleTo = theme === 'dark' ? 'light' : 'dark';
+import { useFetcher } from '@remix-run/react';
+import { MoonIcon, SunIcon } from 'lucide-react';
+import { Button } from '~/components/shadcn/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '~/components/shadcn/ui/dropdown-menu';
+
+const ThemeDropdown = () => {
+  const fetcher = useFetcher();
+
+  const handleThemeChange = (newTheme: string) => {
+    fetcher.submit({ theme: newTheme }, { method: 'post', action: '/resources/theme' });
+  };
 
   return (
-    <Form action="/preferences/theme" method="POST" className="flex items-center">
-      <input type="hidden" name="theme" value={themeToToggleTo} />
-      {theme === 'dark' ? (
-        <button>
-          <FaSun className="h-6 w-6" />
-        </button>
-      ) : (
-        <button>
-          <FaMoon className="h-6 w-6" />
-        </button>
-      )}
-    </Form>
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" className="w-9 px-0">
+            <SunIcon className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+            <MoonIcon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+            <span className="sr-only">Toggle theme</span>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem onClick={() => handleThemeChange('light')}>Light</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => handleThemeChange('dark')}>Dark</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => handleThemeChange('system')}>System</DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </>
   );
 };
 
-export default ToggleThemeButton;
+export default ThemeDropdown;
 ```

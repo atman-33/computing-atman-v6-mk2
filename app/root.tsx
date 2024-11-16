@@ -11,11 +11,11 @@ import {
   useLoaderData,
 } from '@remix-run/react';
 import { useMemo } from 'react';
-import { getSystemTheme } from './utils/system-theme.client';
-import { getThemeFromCookies } from './utils/theme.server';
+import { getSystemTheme } from './routes/resources.theme/services/system-theme.client';
+import { getThemeFromCookie } from './routes/resources.theme/services/theme.server';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const theme = await getThemeFromCookies(request);
+  const theme = await getThemeFromCookie(request);
   return json({ theme });
 };
 
