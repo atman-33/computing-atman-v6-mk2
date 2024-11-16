@@ -2,9 +2,9 @@ import { Link } from '@remix-run/react';
 import { FaGithub, FaTwitter } from 'react-icons/fa';
 import { siteConfig } from '~/config/site-config';
 import { MainNav } from './main-nav';
-import ToggleThemeButton from './toggle-theme-button';
+import ThemeDropdown from './theme-dropdown';
 
-export const Header = ({ theme }: { theme: string }) => {
+export const Header = () => {
   return (
     <header className="top-0 z-50 mx-auto flex justify-center border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="mx-4 flex h-14 w-full items-center justify-center md:container md:w-10/12">
@@ -24,7 +24,7 @@ export const Header = ({ theme }: { theme: string }) => {
               <FaTwitter className="h-6 w-6" />
               <span className="sr-only">Twitter</span>
             </Link>
-            <ToggleThemeButton theme={theme} />
+            <ThemeDropdown />
           </nav>
           <div className="flex items-center space-x-2">{/* <LoginButton /> */}</div>
         </div>

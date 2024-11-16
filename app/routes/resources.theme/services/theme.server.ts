@@ -5,7 +5,7 @@ export const themeCookie = createCookie('theme', {
   secure: process.env.NODE_ENV === 'production',
 });
 
-export const getThemeFromCookies = async (request: Request): Promise<string> => {
+export const getThemeFromCookie = async (request: Request): Promise<string> => {
   const theme = await themeCookie.parse(request.headers.get('Cookie'));
   return theme || 'system';
 };
