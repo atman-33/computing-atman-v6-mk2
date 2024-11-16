@@ -1,6 +1,5 @@
 import { useFetcher } from '@remix-run/react';
 import { MoonIcon, SunIcon } from 'lucide-react';
-import { useEffect } from 'react';
 import { Button } from '~/components/shadcn/ui/button';
 import {
   DropdownMenu,
@@ -12,18 +11,12 @@ import {
 const ThemeDropdown = () => {
   const fetcher = useFetcher();
 
-  useEffect(() => {
-    console.log('test...');
-  }, []);
-
   const handleThemeChange = (newTheme: string) => {
-    console.log('theme change...');
     fetcher.submit({ theme: newTheme }, { method: 'post', action: '/resources/theme' });
   };
 
   return (
     <>
-      <button onClick={() => console.log('xxx')}>test2</button>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="w-9 px-0">

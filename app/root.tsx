@@ -11,6 +11,7 @@ import {
   useLoaderData,
 } from '@remix-run/react';
 import { useMemo } from 'react';
+import { getSystemTheme } from './utils/system-theme.client';
 import { getThemeFromCookies } from './utils/theme.server';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
@@ -35,8 +36,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
   const { theme } = useLoaderData<typeof loader>();
 
   const htmlProps = useMemo(() => {
+    let currentTheme = theme;
+    if (theme === 'system') {
+      currentTheme = getSystemTheme();
+    }
+
     return {
-      className: theme === 'system' ? undefined : theme,
+      className: currentTheme,
     };
   }, [theme]);
 
