@@ -1,5 +1,10 @@
-import { ActionFunctionArgs } from '@remix-run/node';
-import { themeCookie } from '~/utils/theme.server';
+import { ActionFunctionArgs, json, LoaderFunctionArgs } from '@remix-run/node';
+import { getThemeFromCookies, themeCookie } from '~/utils/theme.server';
+
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const currentTheme = await getThemeFromCookies(request);
+  return json({ currentTheme });
+};
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const form = await request.formData();
