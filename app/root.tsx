@@ -11,7 +11,7 @@ import {
   useLoaderData,
 } from '@remix-run/react';
 import { useMemo } from 'react';
-import { getSystemTheme } from './routes/resources.theme/services/system-theme.client';
+import { getSystemTheme } from './routes/resources.theme/services/system-theme';
 import { getThemeFromCookie } from './routes/resources.theme/services/theme.server';
 
 export const meta: MetaFunction = () => {
@@ -36,6 +36,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
     let currentTheme = theme;
     if (theme === 'system') {
       currentTheme = getSystemTheme();
+      // currentTheme = 'light';
     }
 
     return {

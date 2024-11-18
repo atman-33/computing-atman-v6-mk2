@@ -28,10 +28,13 @@ export const getThemeFromCookie = async (request: Request): Promise<string> => {
 
 ### OSのシステムテーマを取得する関数を準備
 
-`app/routes/resources.theme/services/system-theme.client.ts`
+`app/routes/resources.theme/services/system-theme.ts`
 
 ```ts
 export const getSystemTheme = () => {
+  if (typeof window === 'undefined') {
+    return 'light'; // SSR環境ではデフォルト値を返す
+  }
   return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 };
 ```
@@ -57,7 +60,7 @@ import {
   useLoaderData,
 } from '@remix-run/react';
 import { useMemo } from 'react';
-import { getSystemTheme } from './routes/resources.theme/services/system-theme.client';
+import { getSystemTheme } from './routes/resources.theme/services/system-theme';
 import { getThemeFromCookie } from './routes/resources.theme/services/theme.server';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
