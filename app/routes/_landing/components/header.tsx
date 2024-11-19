@@ -1,6 +1,7 @@
 import { Link } from '@remix-run/react';
 import { FaGithub, FaTwitter } from 'react-icons/fa';
 import { siteConfig } from '~/config/site-config';
+import { LoginButton } from './login-button';
 import { MainNav } from './main-nav';
 import ThemeDropdown from './theme-dropdown';
 
@@ -26,7 +27,9 @@ export const Header = () => {
             </Link>
             <ThemeDropdown />
           </nav>
-          <div className="flex items-center space-x-2">{/* <LoginButton /> */}</div>
+          <div className="flex items-center space-x-2">
+            <LoginButton />
+          </div>
         </div>
       </div>
     </header>
