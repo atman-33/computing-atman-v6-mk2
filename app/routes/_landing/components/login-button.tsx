@@ -1,9 +1,11 @@
 import { Link } from '@remix-run/react';
+import { MdAccountCircle } from 'react-icons/md';
 import { Button } from '~/components/shadcn/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '~/components/shadcn/ui/dropdown-menu';
@@ -23,10 +25,16 @@ export const LoginButton = () => {
     <>
       {user ? (
         <DropdownMenu>
-          <DropdownMenuTrigger>
-            <div>{`Hello ${user.name} さん`}</div>
+          <DropdownMenuTrigger className="focus:!outline-none">
+            {user.image ? (
+              <img src={user.image} alt={user.name} className="h-10 w-10" />
+            ) : (
+              <MdAccountCircle className="h-10 w-10 text-primary" />
+            )}
           </DropdownMenuTrigger>
           <DropdownMenuContent>
+            <DropdownMenuLabel>{user.name} さん</DropdownMenuLabel>
+            <DropdownMenuSeparator />
             <DropdownMenuItem>自分の記事</DropdownMenuItem>
             <DropdownMenuItem>設定</DropdownMenuItem>
             <DropdownMenuSeparator />
