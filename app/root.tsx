@@ -36,7 +36,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
     let currentTheme = theme;
     if (theme === 'system') {
       currentTheme = getSystemTheme();
-      // currentTheme = 'light';
     }
 
     return {
