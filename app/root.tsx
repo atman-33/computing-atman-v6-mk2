@@ -1,24 +1,50 @@
-import type { LinksFunction } from '@remix-run/node';
-import { Links, Meta, Outlet, Scripts, ScrollRestoration } from '@remix-run/react';
-
 import './tailwind.css';
 
-export const links: LinksFunction = () => [
-  { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
-  {
-    rel: 'preconnect',
-    href: 'https://fonts.gstatic.com',
-    crossOrigin: 'anonymous',
-  },
-  {
-    rel: 'stylesheet',
-    href: 'https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap',
-  },
-];
+import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node';
+import {
+  json,
+  Links,
+  Meta,
+  Outlet,
+  Scripts,
+  ScrollRestoration,
+  useLoaderData,
+} from '@remix-run/react';
+import { useMemo } from 'react';
+import { getSystemTheme } from './routes/resources.theme/services/system-theme';
+import { getThemeFromCookie } from './routes/resources.theme/services/theme.server';
+
+export const meta: MetaFunction = () => {
+  return [
+    { title: 'Computing Atman' },
+    {
+      name: 'description',
+      content: 'A blog about system development and programming related to IT.',
+    },
+  ];
+};
+
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const theme = await getThemeFromCookie(request);
+  return json({ theme });
+};
 
 export function Layout({ children }: { children: React.ReactNode }) {
+  const { theme } = useLoaderData<typeof loader>();
+
+  const htmlProps = useMemo(() => {
+    let currentTheme = theme;
+    if (theme === 'system') {
+      currentTheme = getSystemTheme();
+    }
+
+    return {
+      className: currentTheme,
+    };
+  }, [theme]);
+
   return (
-    <html lang="ja">
+    <html lang="ja" {...htmlProps}>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
