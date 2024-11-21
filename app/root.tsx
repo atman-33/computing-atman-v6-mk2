@@ -30,7 +30,13 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 };
 
 export function Layout({ children }: { children: React.ReactNode }) {
-  const { theme } = useLoaderData<typeof loader>();
+  const data = useLoaderData<typeof loader>();
+
+  // NOTE: loaderのデータが取得できない場合のエラー回避策
+  let theme = '';
+  if (data && 'theme' in data) {
+    theme = data.theme;
+  }
 
   const htmlProps = useMemo(() => {
     let currentTheme = theme;
