@@ -138,7 +138,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
 ### テーマを変更するドロップダウンメニューを準備
 
-`app/routes/_landing/components/theme-dropdown.tsx`
+`app/routes/_app/components/theme-dropdown.tsx`
 
 ```tsx
 import { useFetcher } from '@remix-run/react';
