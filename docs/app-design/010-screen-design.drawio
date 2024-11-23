@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="7cTXVbluywycEbsM0X0C" name="トップページ-記事作成">
-        <mxGraphModel dx="482" dy="397" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+        <mxGraphModel dx="1482" dy="807" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -216,7 +216,7 @@
                 <mxCell id="90" value="@{タグ}　{更新日 YYYY/MM/DD}" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=13;" parent="87" vertex="1">
                     <mxGeometry x="69" y="30" width="260" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="103" value="･･･" style="rounded=1;html=1;shadow=0;dashed=0;whiteSpace=wrap;fontSize=10;fillColor=#666666;align=center;strokeColor=#4D4D4D;fontColor=#ffffff;" parent="87" vertex="1">
+                <mxCell id="103" value="&lt;span style=&quot;font-family: &amp;quot;Hiragino Kaku Gothic ProN&amp;quot;, &amp;quot;Hiragino Sans&amp;quot;, Meiryo, sans-serif; font-size: 18px; text-align: start;&quot;&gt;⋮&lt;/span&gt;" style="rounded=1;html=1;shadow=0;dashed=0;whiteSpace=wrap;fontSize=10;fillColor=#666666;align=center;strokeColor=#4D4D4D;fontColor=#ffffff;" parent="87" vertex="1">
                     <mxGeometry x="300" y="20" width="30" height="20" as="geometry"/>
                 </mxCell>
                 <mxCell id="91" value="新規投稿" style="rounded=1;html=1;shadow=0;dashed=0;whiteSpace=wrap;fontSize=10;fillColor=#666666;align=center;strokeColor=#4D4D4D;fontColor=#ffffff;" parent="1" vertex="1">
@@ -234,7 +234,7 @@
                 <mxCell id="96" value="@{タグ}　{更新日 YYYY/MM/DD}" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=13;" parent="93" vertex="1">
                     <mxGeometry x="69" y="30" width="260" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="104" value="･･･" style="rounded=1;html=1;shadow=0;dashed=0;whiteSpace=wrap;fontSize=10;fillColor=#666666;align=center;strokeColor=#4D4D4D;fontColor=#ffffff;" parent="93" vertex="1">
+                <mxCell id="104" value="&lt;span style=&quot;font-family: &amp;quot;Hiragino Kaku Gothic ProN&amp;quot;, &amp;quot;Hiragino Sans&amp;quot;, Meiryo, sans-serif; font-size: 18px; text-align: start;&quot;&gt;⋮&lt;/span&gt;" style="rounded=1;html=1;shadow=0;dashed=0;whiteSpace=wrap;fontSize=10;fillColor=#666666;align=center;strokeColor=#4D4D4D;fontColor=#ffffff;" parent="93" vertex="1">
                     <mxGeometry x="300" y="20" width="30" height="20" as="geometry"/>
                 </mxCell>
                 <mxCell id="98" value="" style="group" parent="1" vertex="1" connectable="0">
@@ -249,7 +249,7 @@
                 <mxCell id="101" value="@{タグ}　{更新日 YYYY/MM/DD}" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=13;" parent="98" vertex="1">
                     <mxGeometry x="69" y="30" width="260" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="105" value="･･･" style="rounded=1;html=1;shadow=0;dashed=0;whiteSpace=wrap;fontSize=10;fillColor=#666666;align=center;strokeColor=#4D4D4D;fontColor=#ffffff;" parent="98" vertex="1">
+                <mxCell id="105" value="&lt;span style=&quot;font-family: &amp;quot;Hiragino Kaku Gothic ProN&amp;quot;, &amp;quot;Hiragino Sans&amp;quot;, Meiryo, sans-serif; font-size: 18px; text-align: start;&quot;&gt;⋮&lt;/span&gt;" style="rounded=1;html=1;shadow=0;dashed=0;whiteSpace=wrap;fontSize=10;fillColor=#666666;align=center;strokeColor=#4D4D4D;fontColor=#ffffff;" parent="98" vertex="1">
                     <mxGeometry x="300" y="20" width="30" height="20" as="geometry"/>
                 </mxCell>
                 <mxCell id="106" value="Topページ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;fontStyle=1" parent="1" vertex="1">
@@ -303,7 +303,7 @@
                         <mxPoint x="990" y="270" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="117" value="自分の記事一覧ページ(/$userId/post)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=5" parent="1" vertex="1">
+                <mxCell id="117" value="自分の記事一覧ページ(/users/$userId/posts)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=5" parent="1" vertex="1">
                     <mxGeometry x="1520" y="323" width="290" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="118" value="" style="html=1;shadow=0;dashed=0;shape=mxgraph.bootstrap.rrect;rSize=5;fillColor=#ffffff;strokeColor=#999999;" parent="1" vertex="1">
@@ -351,8 +351,8 @@
                 <mxCell id="131" value="記事作成ページ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;fontStyle=1" parent="1" vertex="1">
                     <mxGeometry x="2200" y="245" width="130" height="40" as="geometry"/>
                 </mxCell>
-                <mxCell id="133" value="記事作成ページ" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=5" parent="1" vertex="1">
-                    <mxGeometry x="2200" y="319.5" width="146" height="43" as="geometry"/>
+                <mxCell id="133" value="記事作成ページ(/uses/$userId/posts/new)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=5" parent="1" vertex="1">
+                    <mxGeometry x="2200" y="319.5" width="280" height="43" as="geometry"/>
                 </mxCell>
                 <mxCell id="134" value="絵文字" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontColor=#000000;" parent="1" vertex="1">
                     <mxGeometry x="2220" y="412.5" width="60" height="30" as="geometry"/>

@@ -1,17 +1,26 @@
 import { json, LoaderFunctionArgs } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
+import { Button } from '~/components/shadcn/ui/button';
+import { mockPosts } from '~/mock/posts';
+import { PostList } from './components/post-list';
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   const userId = params.userId;
-  return json({ userId });
+  const posts = await mockPosts;
+  return json({ userId, posts });
 };
 
 const UserPosts = () => {
-  const data = useLoaderData<typeof loader>();
+  const { userId, posts } = useLoaderData<typeof loader>();
+  console.log(userId);
   return (
     <>
-      <div>UserPosts ページ</div>
-      <div>{data.userId}</div>
+      <div>
+        <Button>新規投稿</Button>
+      </div>
+      <div>
+        <PostList posts={posts} />
+      </div>
     </>
   );
 };

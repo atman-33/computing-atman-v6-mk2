@@ -6,7 +6,9 @@ const LandingLayout = () => {
   return (
     <>
       <Header />
-      <Outlet />
+      <div className="container mx-auto w-full py-4 md:w-10/12">
+        <Outlet />
+      </div>
       <Footer />
     </>
   );
