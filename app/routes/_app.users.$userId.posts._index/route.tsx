@@ -1,5 +1,5 @@
 import { json, LoaderFunctionArgs } from '@remix-run/node';
-import { useLoaderData } from '@remix-run/react';
+import { Link, useLoaderData } from '@remix-run/react';
 import { Button } from '~/components/shadcn/ui/button';
 import { mockPosts } from '~/mock/posts';
 import { PostList } from './components/post-list';
@@ -16,7 +16,9 @@ const UserPosts = () => {
   return (
     <>
       <div>
-        <Button>新規投稿</Button>
+        <Link to="./new">
+          <Button>新規投稿</Button>
+        </Link>
       </div>
       <div>
         <PostList posts={posts} />

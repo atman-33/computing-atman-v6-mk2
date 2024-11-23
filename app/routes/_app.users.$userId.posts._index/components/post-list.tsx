@@ -34,11 +34,9 @@ const PostList = ({ posts }: PostListProps) => {
   // console.log(posts);
   return (
     <>
-      <div className="grid gap-x-12 md:grid-cols-1">
+      <div className="grid gap-4 py-8 md:grid-cols-1">
         {posts.map((post) => (
-          <div className="my-4" key={post.title}>
-            <PostListItem key={post.title} post={post} />
-          </div>
+          <PostListItem key={post.title} post={post} />
         ))}
       </div>
       {/* <PostPagination /> */}
