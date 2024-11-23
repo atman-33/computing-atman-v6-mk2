@@ -76,7 +76,7 @@ export default ({ mode }: { mode: string }) => {
 
 ### Markedにshiki（シンタックスハイライト）を適用
 
-`app/routes/_.poc.md-editor._index/route.tsx`
+`app/routes/__.poc.md-editor._index/route.tsx`
 
 ```tsx
 import 'easymde/dist/easymde.min.css';
@@ -156,7 +156,7 @@ export default MarkdownEditorPage;
 npm i -D @shikijs/transformers
 ```
 
-`app/routes/_.poc.md-editor._index/route.tsx`
+`app/routes/__.poc.md-editor._index/route.tsx`
 
 ```tsx
 import 'easymde/dist/easymde.min.css';
@@ -251,7 +251,7 @@ export default MarkdownEditorPage;
 
 ### ハイライトが適用されるようにCSS設定を追加
 
-`app/routes/_.poc.md-editor._index/md-editor.css`
+`app/routes/__.poc.md-editor._index/md-editor.css`
 
 ```css
 /* コードブロック */

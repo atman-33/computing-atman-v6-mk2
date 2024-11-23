@@ -20,7 +20,7 @@ npm i -D @types/dompurify
 
 ### 基本的なエディタの実装
 
-`app/routes/_.poc.md-editor._index/route.tsx`
+`app/routes/__.poc.md-editor._index/route.tsx`
 
 ```tsx
 import 'easymde/dist/easymde.min.css';
@@ -54,7 +54,7 @@ export default MarkDownEditorPage;
 
 ### プレビュー機能を追加
 
-`app/routes/_.poc.md-editor._index/route.tsx`
+`app/routes/__.poc.md-editor._index/route.tsx`
 
 ```tsx
 import 'easymde/dist/easymde.min.css';

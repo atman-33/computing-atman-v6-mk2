@@ -39,7 +39,7 @@ export const initializeClient = async (request: Request | undefined) => {
 
 ### データ取得例
 
-`app/routes/_.poc.graphql-test._index/route.tsx`
+`app/routes/__.poc.graphql-test._index/route.tsx`
 
 **注意点**  
 
