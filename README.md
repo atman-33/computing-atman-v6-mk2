@@ -12,6 +12,7 @@
 | Storybook            | UIコンポーネント開発環境 |
 | Remix Validated Form | Formライブラリ           |
 | react-icons          | アイコンライブラリ       |
+| Zustand              | 状態管理ライブラリ       |
 
 ### バックエンド（server）
 
