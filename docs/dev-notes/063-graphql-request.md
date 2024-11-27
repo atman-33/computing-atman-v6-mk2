@@ -21,7 +21,7 @@ API_GQL_URL='http://localhost:3000/api/graphql'
 
 ### Clientを作成
 
-`app/lib/graphql-client.ts`
+`app/lib/graphql-client/index.ts`
 
 ```ts
 import { GraphQLClient } from 'graphql-request';

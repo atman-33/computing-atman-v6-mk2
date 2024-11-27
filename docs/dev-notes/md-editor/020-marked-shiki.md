@@ -66,7 +66,7 @@ npm i marked-highlight
 
 ### highlighterを準備
 
-`app/lib/highlighter.ts`
+`app/lib/highlighter/index.ts`
 
 ```ts
 import { createHighlighter } from 'shiki';
