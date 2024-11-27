@@ -35,9 +35,9 @@ export const LoginButton = () => {
           <DropdownMenuContent>
             <DropdownMenuLabel>{user.name} さん</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <Link to={`users/${user.id}/posts`}>自分の記事</Link>
-            </DropdownMenuItem>
+            <Link to={`users/${user.id}/posts`}>
+              <DropdownMenuItem>自分の記事</DropdownMenuItem>
+            </Link>
             <DropdownMenuItem>設定</DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => logout()} disabled={isLoadingLogout}>
