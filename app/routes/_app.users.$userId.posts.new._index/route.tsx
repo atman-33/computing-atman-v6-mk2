@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { SimpleTabsList, SimpleTabsTrigger } from '~/components/shadcn/custom/simple-tabs';
 import { Label } from '~/components/shadcn/ui/label';
 import { Tabs, TabsContent } from '~/components/shadcn/ui/tabs';
@@ -11,8 +12,17 @@ import { useMarkdownValueStore } from './stores/markdown-value-store';
 const PostNewPage = () => {
   const { markdownValue, setMarkdownValue, parseMarkdown } = useMarkdownValueStore();
 
+  useEffect(() => {
+    parseMarkdown();
+  }, [parseMarkdown]);
+
   const handleTextareaChange = (code: string) => {
     setMarkdownValue(code);
+    parseMarkdown();
+  };
+
+  const handlePreviewClick = () => {
+    // NOTE: タブ切替後はparseMarkdown()を呼び出してコードコピーを有効化する。
     parseMarkdown();
   };
 
@@ -32,25 +42,29 @@ const PostNewPage = () => {
                 <SimpleTabsTrigger value="code" className="text-xs">
                   コード
                 </SimpleTabsTrigger>
-                <SimpleTabsTrigger value="preview" className="text-xs">
+                <SimpleTabsTrigger
+                  value="preview"
+                  className="text-xs"
+                  onClick={() => handlePreviewClick()}
+                >
                   プレビュー
                 </SimpleTabsTrigger>
               </SimpleTabsList>
               {/* NOTE: TabsContentの高さを減らす場合はここを調整 e.g. h-5/6 etc. */}
               <TabsContent value="code" className="h-full">
                 <Textarea
-                  className="h-full"
+                  className="h-full max-h-[100dvh]"
                   value={markdownValue}
                   onChange={(e) => handleTextareaChange(e.target.value)}
                 />
               </TabsContent>
-              <TabsContent value="preview">
-                <Preview />
+              <TabsContent value="preview" className="h-full">
+                <Preview className="max-h-[100dvh]" />
               </TabsContent>
             </Tabs>
             <div className="hidden h-full w-1/2 grow p-2 lg:flex lg:flex-col lg:gap-4">
               <div className="text-sm font-bold">プレビュー</div>
-              <Preview />
+              <Preview className="mt-1 max-h-[100dvh]" />
             </div>
           </div>
         </div>

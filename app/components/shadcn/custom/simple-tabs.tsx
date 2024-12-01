@@ -10,17 +10,16 @@ const SimpleTabsList = ({ children, className }: SimpleTabsListProps) => {
   return <TabsList className={`bg-transparent ${className}`}>{children}</TabsList>;
 };
 
-interface SimpleTabsProps {
-  children: React.ReactNode;
+interface SimpleTabsTriggerProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   value: string;
-  className?: string;
 }
 
-const SimpleTabsTrigger = ({ children, value, className }: SimpleTabsProps) => {
+const SimpleTabsTrigger = ({ children, value, className, ...rest }: SimpleTabsTriggerProps) => {
   return (
     <TabsTrigger
       value={value}
       className={`rounded-none data-[state=active]:border-b-2 data-[state=active]:border-b-foreground ${className}`}
+      {...rest}
     >
       {children}
     </TabsTrigger>

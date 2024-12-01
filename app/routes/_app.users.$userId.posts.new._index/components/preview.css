@@ -1,0 +1,128 @@
+.preview {
+  h1,
+  h2 {
+    @apply mt-12 scroll-m-20 break-words border-b pb-2 text-2xl font-semibold tracking-tight first:mt-0;
+  }
+
+  h3 {
+    @apply mt-8 scroll-m-20 break-words text-xl font-semibold tracking-tight;
+  }
+
+  h4 {
+    @apply mt-8 scroll-m-20 break-words text-lg font-semibold tracking-tight;
+  }
+
+  h5 {
+    @apply mt-8 scroll-m-20 break-words text-lg font-semibold tracking-tight;
+  }
+
+  h6 {
+    @apply mt-8 scroll-m-20 break-words text-base font-semibold tracking-tight;
+  }
+
+  a {
+    @apply font-medium underline underline-offset-4;
+  }
+
+  p {
+    @apply leading-7 [&:not(:first-child)]:mt-6;
+  }
+
+  ul {
+    @apply my-6 ml-6 list-disc;
+  }
+
+  ol {
+    @apply my-6 ml-6 list-decimal;
+  }
+
+  li {
+    @apply mt-2;
+  }
+
+  blockquote {
+    @apply mt-6 border-l-2 pl-6 italic;
+  }
+
+  strong {
+    @apply bg-gradient-to-b from-transparent via-transparent to-yellow-300 bg-[length:100%_100%] bg-no-repeat px-1 text-center text-[1.2rem] font-bold dark:to-purple-800;
+  }
+
+  img {
+    @apply rounded-md;
+  }
+
+  hr {
+    @apply my-4 md:my-8;
+  }
+
+  table {
+    @apply my-4 w-full;
+  }
+
+  tr {
+    @apply m-0 border-t p-0 even:bg-muted;
+  }
+
+  th {
+    @apply border px-4 py-2 text-left font-bold [&[align=center]]:text-center [&[align=right]]:text-right;
+  }
+
+  td {
+    @apply border px-4 py-2 text-left [&[align=center]]:text-center [&[align=right]]:text-right;
+  }
+
+  /* コードブロック（短い） */
+  code:not(:has(span)) {
+    @apply mx-1 rounded bg-zinc-300 p-1 font-bold dark:bg-zinc-800;
+  }
+
+  /* コードブロック（長い） */
+  code > pre {
+    padding: 1em 1.2em;
+    overflow-x: auto;
+    border-radius: 8px;
+    margin: 1em 0;
+  }
+
+  /* コードブロック - shiki transformers - */
+  .line {
+    display: inline;
+    padding-bottom: 0;
+  }
+  .diff {
+    display: inline-block;
+    width: 100%;
+  }
+  .diff.add {
+    background-color: #0505;
+  }
+  .diff.add::before {
+    content: '+';
+    color: green;
+    margin-right: 8px; /* +とテキストの間のスペース調整 */
+  }
+  .diff.remove {
+    background-color: #8005;
+  }
+  .diff.remove::before {
+    content: '-';
+    color: red;
+    margin-right: 8px; /* -とテキストの間のスペース調整 */
+  }
+  .highlighted {
+    display: inline-block;
+    width: 100%;
+    background-color: #555;
+  }
+  .diff:before {
+    position: absolute;
+    left: 40px;
+  }
+  .has-focused .line {
+    filter: blur(0.095rem);
+  }
+  .has-focused .focused {
+    filter: blur(0);
+  }
+}
