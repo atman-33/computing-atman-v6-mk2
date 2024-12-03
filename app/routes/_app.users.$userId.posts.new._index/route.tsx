@@ -1,15 +1,24 @@
+import { json, LoaderFunctionArgs } from '@remix-run/node';
+import { useLoaderData, useNavigate } from '@remix-run/react';
 import { useEffect } from 'react';
 import { SimpleTabsList, SimpleTabsTrigger } from '~/components/shadcn/custom/simple-tabs';
+import { Button } from '~/components/shadcn/ui/button';
 import { Label } from '~/components/shadcn/ui/label';
 import { Tabs, TabsContent } from '~/components/shadcn/ui/tabs';
 import { Textarea } from '~/components/shadcn/ui/textarea';
 import { LabelInput } from '~/components/shared/label-input';
+import { OkCancelDialog } from '~/components/shared/ok-cancel-dialog';
 import { Preview } from './components/preview';
 import { useMarkdownValueStore } from './stores/markdown-value-store';
 
-// TODO: マークダウンのプレビュー画面を追加
+export const loader = async ({ params }: LoaderFunctionArgs) => {
+  const userId = params.userId;
+  return json({ userId });
+};
 
 const PostNewPage = () => {
+  const { userId } = useLoaderData<typeof loader>();
+  const navigate = useNavigate();
   const { markdownValue, setMarkdownValue, parseMarkdown } = useMarkdownValueStore();
 
   useEffect(() => {
@@ -21,6 +30,10 @@ const PostNewPage = () => {
     parseMarkdown();
   };
 
+  const handleBackClick = () => {
+    navigate(`/users/${userId}/posts`);
+  };
+
   const handlePreviewClick = () => {
     // NOTE: タブ切替後はparseMarkdown()を呼び出してコードコピーを有効化する。
     parseMarkdown();
@@ -28,7 +41,19 @@ const PostNewPage = () => {
 
   return (
     <>
-      <div className="flex h-[120dvh] flex-col gap-2">
+      <div className="flex h-[130dvh] flex-col gap-2">
+        <div className="flex items-center justify-between">
+          <OkCancelDialog
+            clickHandler={() => handleBackClick()}
+            description="保存していない場合、編集中の内容は破棄されます。前のページに戻ってもよろしいですか？"
+          >
+            <Button variant="ghost">戻る</Button>
+          </OkCancelDialog>
+          <div className="flex gap-4">
+            <Button variant="ghost">下書きに保存</Button>
+            <Button variant="ghost">公開に進む</Button>
+          </div>
+        </div>
         <LabelInput label="絵文字" id="emoji" placeholder="" type="text" />
         <LabelInput label="タイトル" id="title" placeholder="" type="text" />
         <div className="flex grow flex-col gap-1.5">

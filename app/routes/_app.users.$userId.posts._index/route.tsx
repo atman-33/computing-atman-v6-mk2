@@ -17,7 +17,7 @@ const UserPosts = () => {
     <>
       <div>
         <Link to="./new">
-          <Button>新規投稿</Button>
+          <Button variant="ghost">新規投稿</Button>
         </Link>
       </div>
       <div>
