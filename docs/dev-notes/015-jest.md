@@ -1,5 +1,7 @@
 # Jestのセットアップ方法
 
+> vitestを利用する場合、jestは不要となります。
+
 ## ステップ
 
 ### インストール
@@ -48,7 +50,7 @@ export default config;
 
 ```json
     "---- TEST SECTION ----": "---- ---- ---- ---- ----",
-    "test": "jest"
+    "test-jest": "jest"
 ```
 
 ### gitignoreを設定

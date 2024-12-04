@@ -22,7 +22,8 @@
     "---- TEST SECTION ----": "---- ---- ---- ---- ----",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "test": "jest",
+    "test": "vitest",
+    "test-jest": "jest",
     "---- CI SECTION ----": "---- ---- ---- ---- ----",
     "ci:lint": "npm run lint",
     "ci:build": "npx env-cmd -f .env.example npm run build",
@@ -121,7 +122,8 @@
     "tsx": "^4.19.1",
     "typescript": "^5.6.3",
     "vite": "^5.1.0",
-    "vite-tsconfig-paths": "^4.2.1"
+    "vite-tsconfig-paths": "^4.2.1",
+    "vitest": "^2.1.8"
   },
   "engines": {
     "node": ">=20.0.0"

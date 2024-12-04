@@ -1,0 +1,18 @@
+{
+  "recommendations": [
+    "vitest.explorer",
+    "yzhang.markdown-all-in-one",
+    "davidanson.vscode-markdownlint",
+    "github.vscode-github-actions",
+    "github.vscode-pull-request-github",
+    "mhutchie.git-graph",
+    "esbenp.prettier-vscode",
+    "prisma.prisma",
+    "jock.svg",
+    "bradlc.vscode-tailwindcss",
+    "gruntfuggly.todo-tree",
+    "orsenkucher.vscode-graphql",
+    "dbaeumer.vscode-eslint",
+    "alexshen.classdiagram-ts"
+  ]
+}
