@@ -11,7 +11,7 @@ describe('post.domain', () => {
   test('生成_createで生成できること', () => {
     // Arrange
     const title = new Title('Title');
-    const emoji = new Emoji('Emoji');
+    const emoji = new Emoji('🚀');
     const content = new Content('# Content');
     const status = new Status('DRAFT');
     const authorId = new UserId('65c9f1e3b68e5c001234abcd');
@@ -28,7 +28,7 @@ describe('post.domain', () => {
     // Arrange
     const id = new PostId('75c9f1e3b68e5c001234abcd');
     const title = new Title('Title');
-    const emoji = new Emoji('Emoji');
+    const emoji = new Emoji('🚀');
     const content = new Content('# Content');
     const status = new Status('DRAFT');
     const authorId = new UserId('65c9f1e3b68e5c001234abcd');

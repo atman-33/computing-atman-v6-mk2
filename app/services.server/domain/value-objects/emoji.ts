@@ -6,7 +6,7 @@ export class Emoji extends ValueObject<string, 'Emoji'> {
   }
 
   protected validate(value: string): void {
-    if (value.length > 1) {
+    if (Array.from(value).length > 1) {
       throw new Error('絵文字は1文字にしてください。');
     }
   }
