@@ -5,3 +5,6 @@ node_modules
 .env
 
 *storybook.log
+
+# prisma-schema-forge
+/tools/prisma-schema-forge/@generated

@@ -1,6 +1,6 @@
 {
   "name": "comupting-atman-v6-mk2",
-  "version": "0.3.1",
+  "version": "0.1.0",
   "private": true,
   "sideEffects": false,
   "type": "module",
@@ -24,6 +24,8 @@
     "build-storybook": "storybook build",
     "test": "vitest",
     "test-jest": "jest",
+    "---- TOOL SECTION ----": "---- ---- ---- ---- ----",
+    "prisma-schema-forge:": "cd ./tools/prisma-schema-forge && npx prisma-schema-forge generate",
     "---- CI SECTION ----": "---- ---- ---- ---- ----",
     "ci:lint": "npm run lint",
     "ci:build": "npx env-cmd -f .env.example npm run build",

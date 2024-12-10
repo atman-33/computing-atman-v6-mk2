@@ -1,0 +1,13 @@
+
+import { ValueObject } from './abstractions/value-object';
+
+export class __column__ extends ValueObject<__columnType__, '__column__'> {
+  constructor(value: __columnType__) {
+    super(value);
+  }
+
+  protected validate(value: __columnType__): void {
+    // TODO: add validation logic...
+  }
+}
+    
