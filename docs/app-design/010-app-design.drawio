@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="vzIo5nbIWjNf1Khx27UF" name="アーキテクチャ">
-        <mxGraphModel dx="1422" dy="769" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+        <mxGraphModel dx="1609" dy="866" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -413,57 +413,57 @@
         </mxGraphModel>
     </diagram>
     <diagram id="6uSim-a_h45tHXF18ltL" name="ドメインモデル図">
-        <mxGraphModel dx="1399" dy="-416" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+        <mxGraphModel dx="1609" dy="-303" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
-                <mxCell id="Mnl76NfuCzmvYye55_eO-6" value="記事集約" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#333333;dashed=1;verticalAlign=top;fillColor=none;" vertex="1" parent="1">
+                <mxCell id="Mnl76NfuCzmvYye55_eO-6" value="記事集約" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#333333;dashed=1;verticalAlign=top;fillColor=none;" parent="1" vertex="1">
                     <mxGeometry x="568" y="1400" width="396" height="230" as="geometry"/>
                 </mxCell>
-                <mxCell id="gLuSeoW5lzVfEgnGZLy2-1" value="&lt;u style=&quot;font-weight: bold;&quot;&gt;記事&lt;br&gt;&lt;/u&gt;&lt;b&gt;&lt;u&gt;(Post)&lt;/u&gt;&lt;/b&gt;&lt;br&gt;&lt;br&gt;ID&lt;br&gt;タイトル&lt;br&gt;絵文字&lt;br&gt;コンテンツ&lt;br&gt;ステータス&lt;br&gt;作成者ID" style="rounded=1;whiteSpace=wrap;html=1;align=center;" vertex="1" parent="1">
+                <mxCell id="gLuSeoW5lzVfEgnGZLy2-1" value="&lt;u style=&quot;font-weight: bold;&quot;&gt;記事&lt;br&gt;&lt;/u&gt;&lt;b&gt;&lt;u&gt;(Post)&lt;/u&gt;&lt;/b&gt;&lt;br&gt;&lt;br&gt;ID&lt;br&gt;タイトル&lt;br&gt;絵文字&lt;br&gt;コンテンツ&lt;br&gt;ステータス&lt;br&gt;作成者ID" style="rounded=1;whiteSpace=wrap;html=1;align=center;" parent="1" vertex="1">
                     <mxGeometry x="676" y="1440" width="180" height="150" as="geometry"/>
                 </mxCell>
-                <mxCell id="Mnl76NfuCzmvYye55_eO-1" value="ドメインモデル図の凡例" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=6;" vertex="1" parent="1">
+                <mxCell id="Mnl76NfuCzmvYye55_eO-1" value="ドメインモデル図の凡例" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=6;" parent="1" vertex="1">
                     <mxGeometry x="40" y="1200" width="470" height="90" as="geometry"/>
                 </mxCell>
-                <mxCell id="Mnl76NfuCzmvYye55_eO-2" value="抽象的なモデル" style="rounded=1;whiteSpace=wrap;html=1;align=center;" vertex="1" parent="1">
+                <mxCell id="Mnl76NfuCzmvYye55_eO-2" value="抽象的なモデル" style="rounded=1;whiteSpace=wrap;html=1;align=center;" parent="1" vertex="1">
                     <mxGeometry x="172" y="1231" width="100" height="45" as="geometry"/>
                 </mxCell>
-                <mxCell id="Mnl76NfuCzmvYye55_eO-3" value="具体例" style="rounded=1;whiteSpace=wrap;html=1;align=center;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+                <mxCell id="Mnl76NfuCzmvYye55_eO-3" value="具体例" style="rounded=1;whiteSpace=wrap;html=1;align=center;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
                     <mxGeometry x="57" y="1231" width="100" height="45" as="geometry"/>
                 </mxCell>
-                <mxCell id="Mnl76NfuCzmvYye55_eO-4" value="ルール/制約&lt;br&gt;（ドメイン知識）" style="rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+                <mxCell id="Mnl76NfuCzmvYye55_eO-4" value="ルール/制約&lt;br&gt;（ドメイン知識）" style="rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;" parent="1" vertex="1">
                     <mxGeometry x="284" y="1231" width="100" height="45" as="geometry"/>
                 </mxCell>
-                <mxCell id="Mnl76NfuCzmvYye55_eO-5" value="集約の範囲" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#333333;dashed=1;" vertex="1" parent="1">
+                <mxCell id="Mnl76NfuCzmvYye55_eO-5" value="集約の範囲" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#333333;dashed=1;" parent="1" vertex="1">
                     <mxGeometry x="402" y="1231" width="90" height="45" as="geometry"/>
                 </mxCell>
-                <mxCell id="Mnl76NfuCzmvYye55_eO-7" value="ユーザー集約" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#333333;dashed=1;verticalAlign=top;fillColor=none;" vertex="1" parent="1">
+                <mxCell id="Mnl76NfuCzmvYye55_eO-7" value="ユーザー集約" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#333333;dashed=1;verticalAlign=top;fillColor=none;" parent="1" vertex="1">
                     <mxGeometry x="90" y="1400" width="390" height="230" as="geometry"/>
                 </mxCell>
-                <mxCell id="Mnl76NfuCzmvYye55_eO-8" value="&lt;u style=&quot;font-weight: bold;&quot;&gt;ユーザー&lt;br&gt;&lt;/u&gt;&lt;b&gt;&lt;u&gt;(User)&lt;/u&gt;&lt;/b&gt;&lt;br&gt;&lt;br&gt;ID&lt;br&gt;Eメール&lt;br&gt;パスワード&lt;br&gt;名前&lt;br&gt;..." style="rounded=1;whiteSpace=wrap;html=1;align=center;" vertex="1" parent="1">
+                <mxCell id="Mnl76NfuCzmvYye55_eO-8" value="&lt;u style=&quot;font-weight: bold;&quot;&gt;ユーザー&lt;br&gt;&lt;/u&gt;&lt;b&gt;&lt;u&gt;(User)&lt;/u&gt;&lt;/b&gt;&lt;br&gt;&lt;br&gt;ID&lt;br&gt;Eメール&lt;br&gt;パスワード&lt;br&gt;名前&lt;br&gt;..." style="rounded=1;whiteSpace=wrap;html=1;align=center;" parent="1" vertex="1">
                     <mxGeometry x="202" y="1455" width="180" height="120" as="geometry"/>
                 </mxCell>
-                <mxCell id="Ken3ZM3pUgcKEK9u4SQD-1" value="" style="endArrow=classic;html=1;" edge="1" parent="1" source="gLuSeoW5lzVfEgnGZLy2-1" target="Mnl76NfuCzmvYye55_eO-8">
+                <mxCell id="Ken3ZM3pUgcKEK9u4SQD-1" value="" style="endArrow=classic;html=1;" parent="1" source="gLuSeoW5lzVfEgnGZLy2-1" target="Mnl76NfuCzmvYye55_eO-8" edge="1">
                     <mxGeometry width="50" height="50" relative="1" as="geometry">
                         <mxPoint x="380" y="1410" as="sourcePoint"/>
                         <mxPoint x="430" y="1360" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="Ken3ZM3pUgcKEK9u4SQD-2" value="0..n" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Ken3ZM3pUgcKEK9u4SQD-1">
+                <mxCell id="Ken3ZM3pUgcKEK9u4SQD-2" value="0..n" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="Ken3ZM3pUgcKEK9u4SQD-1" vertex="1" connectable="0">
                     <mxGeometry x="-0.7485" y="-2" relative="1" as="geometry">
                         <mxPoint as="offset"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="Ken3ZM3pUgcKEK9u4SQD-3" value="1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Ken3ZM3pUgcKEK9u4SQD-1">
+                <mxCell id="Ken3ZM3pUgcKEK9u4SQD-3" value="1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="Ken3ZM3pUgcKEK9u4SQD-1" vertex="1" connectable="0">
                     <mxGeometry x="0.8125" y="-1" relative="1" as="geometry">
                         <mxPoint as="offset"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="LzWNMeLQmXJLDiudUz27-1" value="・Statusの定義&lt;br&gt;　- DRAFT&lt;br style=&quot;border-color: var(--border-color);&quot;&gt;　- PUBLIC" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;fillColor=none;" vertex="1" parent="1">
+                <mxCell id="LzWNMeLQmXJLDiudUz27-1" value="・Statusの定義&lt;br&gt;　- DRAFT&lt;br style=&quot;border-color: var(--border-color);&quot;&gt;　- PUBLIC" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;fillColor=none;" parent="1" vertex="1">
                     <mxGeometry x="890" y="1300" width="150" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="LzWNMeLQmXJLDiudUz27-2" style="edgeStyle=none;html=1;endArrow=none;endFill=0;dashed=1;" edge="1" source="LzWNMeLQmXJLDiudUz27-1" parent="1" target="gLuSeoW5lzVfEgnGZLy2-1">
+                <mxCell id="LzWNMeLQmXJLDiudUz27-2" style="edgeStyle=none;html=1;endArrow=none;endFill=0;dashed=1;" parent="1" source="LzWNMeLQmXJLDiudUz27-1" target="gLuSeoW5lzVfEgnGZLy2-1" edge="1">
                     <mxGeometry relative="1" as="geometry">
                         <mxPoint x="960" y="1351.25" as="sourcePoint"/>
                         <mxPoint x="850" y="1375" as="targetPoint"/>

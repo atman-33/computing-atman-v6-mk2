@@ -1,15 +1,13 @@
+import { PostStatus } from '~/lib/graphql/@generated/graphql';
 import { ValueObject } from './abstractions/value-object';
 
-export class Status extends ValueObject<string, 'Status'> {
-  public static readonly DRAFT = 'DRAFT';
-  public static readonly PUBLIC = 'PUBLIC';
-
-  constructor(value: string) {
+export class Status extends ValueObject<PostStatus, 'Status'> {
+  constructor(value: PostStatus) {
     super(value);
   }
 
-  protected validate(value: string): void {
-    const validValues = [Status.DRAFT, Status.PUBLIC];
+  protected validate(value: PostStatus): void {
+    const validValues = [PostStatus.Draft, PostStatus.Public];
     if (!validValues.includes(value)) {
       throw new Error('ステータスは DRAFT or PUBLIC を指定してください。');
     }
