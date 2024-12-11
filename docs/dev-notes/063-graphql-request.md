@@ -28,7 +28,7 @@ import { GraphQLClient } from 'graphql-request';
 import { env } from '~/config/env';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const initializeClient = async (request: Request | undefined) => {
+export const initializeClient = async (request: Request | undefined = undefined) => {
   const client = new GraphQLClient(env.API_GQL_URL, {
     fetch: fetch,
   });
@@ -72,7 +72,7 @@ const getTagsGql = graphql(`
 `);
 
 export const loader = async () => {
-  const client = await initializeClient(undefined);
+  const client = await initializeClient();
   return await client
     .request(getTagsGql)
     .then(({ tags }) => {

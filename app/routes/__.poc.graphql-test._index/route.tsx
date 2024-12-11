@@ -23,7 +23,7 @@ const getTagsGql = graphql(`
 `);
 
 export const loader = async () => {
-  const client = await initializeClient(undefined);
+  const client = await initializeClient();
   return await client
     .request(getTagsGql)
     .then(({ tags }) => {
