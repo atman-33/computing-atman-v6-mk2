@@ -21,7 +21,7 @@ builder.mutationField('createPost', (t) =>
         throw new Error('required ctx.user');
       }
 
-      if (input.title.length > 3) {
+      if (input.title.length > 100) {
         throw new Error('タイトルは100文字以内にしてください。');
       }
 
