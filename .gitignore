@@ -6,5 +6,7 @@ node_modules
 
 *storybook.log
 
+/coverage
+
 # prisma-schema-forge
 /tools/prisma-schema-forge/@generated

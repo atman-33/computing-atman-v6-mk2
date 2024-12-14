@@ -11,6 +11,9 @@ export default defineConfig(async (configEnv: ConfigEnv) => {
     defineConfig({
       test: {
         globals: true,
+        coverage: {
+          exclude: ['build/**/*', 'public/**/*', 'tools/**/*'],
+        },
       },
     }),
   );
