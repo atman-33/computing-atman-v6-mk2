@@ -1,2 +1,5 @@
 # shadcn/ui
-app/components/shadcn/ui
+/app/components/shadcn/ui
+
+# prisma-schema-forge
+/tools/prisma-schema-forge

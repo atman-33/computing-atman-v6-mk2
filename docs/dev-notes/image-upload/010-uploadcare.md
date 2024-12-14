@@ -42,7 +42,7 @@ export const clientEnv = {
 
 ### ファイルアップロード用のページを作成
 
-`app/routes/_.poc.image-uploader._index/components/uploadcare-file-uploader-regular.tsx`
+`app/routes/__.poc.image-uploader._index/components/uploadcare-file-uploader-regular.tsx`
 
 ```tsx
 import { FileUploaderRegular, Metadata, SourceTypes } from '@uploadcare/react-uploader';
@@ -93,7 +93,7 @@ export const UploadcareFileUploaderRegular = () => {
 };
 ```
 
-`app/routes/_.poc.image-uploader._index/route.tsx`
+`app/routes/__.poc.image-uploader._index/route.tsx`
 
 ```tsx
 import '@uploadcare/react-uploader/core.css';
@@ -121,7 +121,7 @@ npm install @uploadcare/upload-client
 
 - コンポーネントを作成
 
-`app/routes/_.poc.image-uploader._index/components/uploadcare-image-uploader.tsx`
+`app/routes/__.poc.image-uploader._index/components/uploadcare-image-uploader.tsx`
 
 ```tsx
 import { uploadFile } from '@uploadcare/upload-client';

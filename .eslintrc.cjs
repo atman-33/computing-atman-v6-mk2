@@ -19,7 +19,12 @@ module.exports = {
     commonjs: true,
     es6: true,
   },
-  ignorePatterns: ['!**/.server', '!**/.client', 'app/components/shadcn/ui'],
+  ignorePatterns: [
+    '!**/.server',
+    '!**/.client',
+    'app/components/shadcn/ui',
+    'tools/prisma-schema-forge/@generated',
+  ],
 
   // Base config
   extends: ['eslint:recommended', 'plugin:storybook/recommended'],

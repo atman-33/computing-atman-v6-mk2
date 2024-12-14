@@ -6,7 +6,7 @@
 
 ### 画像アップロード機能を追加
 
-`app/routes/_.poc.md-editor._index/route.tsx`
+`app/routes/__.poc.md-editor._index/route.tsx`
 
 - 画像アップロード関数を追加
 

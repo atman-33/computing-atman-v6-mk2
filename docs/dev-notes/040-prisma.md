@@ -46,7 +46,7 @@ export const singleton = <Value>(name: string, valueFactory: () => Value): Value
 
 ### PrismaClientを作成
 
-`app/lib/prisma.ts`
+`app/lib/prisma/index.ts`
 
 ```ts
 import { PrismaClient } from '@prisma/client';

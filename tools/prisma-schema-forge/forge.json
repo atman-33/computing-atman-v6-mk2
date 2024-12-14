@@ -1,0 +1,5 @@
+{
+  "prismaSchema": "../../prisma/schema.prisma",
+  "templates": "./templates",
+  "output": "./@generated"
+}

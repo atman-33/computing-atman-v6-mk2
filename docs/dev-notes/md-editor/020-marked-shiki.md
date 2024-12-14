@@ -1,5 +1,54 @@
 # マークダウンにshiki（シンタックスハイライト）を適用する方法
 
+> 追記:  
+> CSR用コンポーネントをdynamic importしているが、ClientOnlyコンポーネントを利用すれば通常通り記述可能
+
+```tsx
+import * as React from 'react';
+import { useSyncExternalStore } from 'react';
+
+const subscribe = () => {
+  return () => {};
+};
+
+const useHydrated = () => {
+  return useSyncExternalStore(
+    subscribe,
+    () => true,
+    () => false,
+  );
+};
+
+interface Props {
+  children(): React.ReactNode;
+  fallback?: React.ReactNode;
+}
+
+/**
+ * Render the children only after the JS has loaded client-side. Use an optional
+ * fallback component if the JS is not yet loaded.
+ *
+ * Example: Render a Chart component if JS loads, renders a simple FakeChart
+ * component server-side or if there is no JS. The FakeChart can have only the
+ * UI without the behavior or be a loading spinner or skeleton.
+ * ```tsx
+ * return (
+ *   <ClientOnly fallback={<FakeChart />}>
+ *     {() => <Chart />}
+ *   </ClientOnly>
+ * );
+ * ```
+ * @param children - A function that returns a React node to be rendered after hydration
+ * @param fallback - A React node to be rendered as a fallback until hydration occurs
+ * @returns A React node that is either the children or the fallback based on hydration status
+ */
+export const ClientOnly = ({ children, fallback = null }: Props) => {
+  const isHydrated = useHydrated();
+
+  return isHydrated ? <>{children()}</> : <>{fallback}</>;
+};
+```
+
 ## 参考URL
 
 - [marked-highlight](https://www.npmjs.com/package/marked-highlight)
@@ -17,7 +66,7 @@ npm i marked-highlight
 
 ### highlighterを準備
 
-`app/lib/highlighter.ts`
+`app/lib/highlighter/index.ts`
 
 ```ts
 import { createHighlighter } from 'shiki';
@@ -76,7 +125,7 @@ export default ({ mode }: { mode: string }) => {
 
 ### Markedにshiki（シンタックスハイライト）を適用
 
-`app/routes/_.poc.md-editor._index/route.tsx`
+`app/routes/__.poc.md-editor._index/route.tsx`
 
 ```tsx
 import 'easymde/dist/easymde.min.css';
@@ -156,7 +205,7 @@ export default MarkdownEditorPage;
 npm i -D @shikijs/transformers
 ```
 
-`app/routes/_.poc.md-editor._index/route.tsx`
+`app/routes/__.poc.md-editor._index/route.tsx`
 
 ```tsx
 import 'easymde/dist/easymde.min.css';
@@ -251,7 +300,7 @@ export default MarkdownEditorPage;
 
 ### ハイライトが適用されるようにCSS設定を追加
 
-`app/routes/_.poc.md-editor._index/md-editor.css`
+`app/routes/__.poc.md-editor._index/md-editor.css`
 
 ```css
 /* コードブロック */

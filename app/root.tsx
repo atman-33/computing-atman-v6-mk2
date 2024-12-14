@@ -10,7 +10,7 @@ import {
   ScrollRestoration,
   useLoaderData,
 } from '@remix-run/react';
-import { useMemo } from 'react';
+import { useEffect, useState } from 'react';
 import { getSystemTheme } from './routes/resources.theme/services/system-theme';
 import { getThemeFromCookie } from './routes/resources.theme/services/theme.server';
 
@@ -30,21 +30,16 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 };
 
 export function Layout({ children }: { children: React.ReactNode }) {
-  const { theme } = useLoaderData<typeof loader>();
+  // NOTE: ... || {} はloaderのデータが取得できない場合のエラー回避策
+  const { theme } = useLoaderData<typeof loader>() || {};
+  const [currentTheme, setCurrentTheme] = useState('');
 
-  const htmlProps = useMemo(() => {
-    let currentTheme = theme;
-    if (theme === 'system') {
-      currentTheme = getSystemTheme();
-    }
-
-    return {
-      className: currentTheme,
-    };
+  useEffect(() => {
+    setCurrentTheme(theme === 'system' ? getSystemTheme() : theme);
   }, [theme]);
 
   return (
-    <html lang="ja" {...htmlProps}>
+    <html lang="ja" className={currentTheme}>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />

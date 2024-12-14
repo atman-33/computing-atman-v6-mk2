@@ -5,3 +5,8 @@ node_modules
 .env
 
 *storybook.log
+
+/coverage
+
+# prisma-schema-forge
+/tools/prisma-schema-forge/@generated
