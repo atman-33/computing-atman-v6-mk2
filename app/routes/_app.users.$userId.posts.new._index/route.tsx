@@ -1,5 +1,5 @@
-import { json, LoaderFunctionArgs } from '@remix-run/node';
-import { useLoaderData, useNavigate } from '@remix-run/react';
+import { ActionFunctionArgs, json, LoaderFunctionArgs } from '@remix-run/node';
+import { Form, useLoaderData, useNavigate } from '@remix-run/react';
 import { useEffect } from 'react';
 import { SimpleTabsList, SimpleTabsTrigger } from '~/components/shadcn/custom/simple-tabs';
 import { Button } from '~/components/shadcn/ui/button';
@@ -8,12 +8,26 @@ import { Tabs, TabsContent } from '~/components/shadcn/ui/tabs';
 import { Textarea } from '~/components/shadcn/ui/textarea';
 import { LabelInput } from '~/components/shared/label-input';
 import { OkCancelDialog } from '~/components/shared/ok-cancel-dialog';
+import { CreatePostInput, PostStatus } from '~/lib/graphql/@generated/graphql';
+import { createPost } from '~/services/post/create-post';
+import { getFormData } from '~/utils/form-data';
 import { Preview } from './components/preview';
 import { useMarkdownValueStore } from './stores/markdown-value-store';
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   const userId = params.userId;
   return json({ userId });
+};
+
+export const action = async ({ request }: ActionFunctionArgs) => {
+  const form = await request.formData();
+  const createPostInput: CreatePostInput = {
+    ...getFormData<CreatePostInput>(form),
+    status: PostStatus.Draft,
+  };
+  const data = await createPost(createPostInput, request);
+  // console.log(data);
+  return json(data);
 };
 
 const PostNewPage = () => {
@@ -41,7 +55,7 @@ const PostNewPage = () => {
 
   return (
     <>
-      <div className="flex h-[130dvh] flex-col gap-2">
+      <Form className="flex h-[130dvh] flex-col gap-2" method="POST">
         <div className="flex items-center justify-between">
           <OkCancelDialog
             clickHandler={() => handleBackClick()}
@@ -50,7 +64,9 @@ const PostNewPage = () => {
             <Button variant="ghost">戻る</Button>
           </OkCancelDialog>
           <div className="flex gap-4">
-            <Button variant="ghost">下書きに保存</Button>
+            <Button variant="ghost" type="submit">
+              下書きに保存
+            </Button>
             <Button variant="ghost">公開に進む</Button>
           </div>
         </div>
@@ -81,6 +97,7 @@ const PostNewPage = () => {
                   className="h-full max-h-[100dvh]"
                   value={markdownValue}
                   onChange={(e) => handleTextareaChange(e.target.value)}
+                  name="content"
                 />
               </TabsContent>
               <TabsContent value="preview" className="h-full">
@@ -93,7 +110,7 @@ const PostNewPage = () => {
             </div>
           </div>
         </div>
-      </div>
+      </Form>
     </>
   );
 };

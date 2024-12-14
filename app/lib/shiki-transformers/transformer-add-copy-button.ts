@@ -48,7 +48,7 @@ const transformerAddCopyButton = (
         const buttons = document.querySelectorAll('button.copy');
         // console.log('buttons: ', buttons);
         buttons.forEach((btn) => {
-          console.log('btn: ', btn);
+          // console.log('btn: ', btn);
           btn.addEventListener('click', () => {
             // console.log('clicked!');
             const code = btn.getAttribute('data-code');

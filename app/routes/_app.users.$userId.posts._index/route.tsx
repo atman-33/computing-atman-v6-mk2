@@ -11,8 +11,8 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 };
 
 const UserPosts = () => {
-  const { userId, posts } = useLoaderData<typeof loader>();
-  console.log(userId);
+  const { posts } = useLoaderData<typeof loader>();
+  // console.log(userId);
   return (
     <>
       <div>

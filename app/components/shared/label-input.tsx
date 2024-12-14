@@ -6,14 +6,15 @@ interface LabelInputProps {
   className?: string;
   type?: React.HTMLInputTypeAttribute | undefined;
   id?: string;
+  name?: string;
   placeholder?: string;
 }
 
-export const LabelInput = ({ label, className, type, id, placeholder }: LabelInputProps) => {
+export const LabelInput = ({ label, className, type, id, placeholder, name }: LabelInputProps) => {
   return (
     <div className={`flex flex-col gap-y-1.5 ${className}`}>
       <Label htmlFor={id}>{label}</Label>
-      <Input type={type} id={id} placeholder={placeholder} />
+      <Input type={type} id={id} name={name ?? id} placeholder={placeholder} />
     </div>
   );
 };

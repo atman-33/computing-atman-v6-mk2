@@ -1,3 +1,4 @@
+import { LoaderFunctionArgs } from '@remix-run/node';
 import { json, useLoaderData } from '@remix-run/react';
 import { ClientError } from 'graphql-request';
 import {
@@ -22,8 +23,8 @@ const getTagsGql = graphql(`
   }
 `);
 
-export const loader = async () => {
-  const client = await initializeClient();
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const client = await initializeClient(request);
   return await client
     .request(getTagsGql)
     .then(({ tags }) => {
