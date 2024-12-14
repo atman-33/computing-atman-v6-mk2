@@ -21,6 +21,10 @@ builder.mutationField('createPost', (t) =>
         throw new Error('required ctx.user');
       }
 
+      if (input.title.length > 3) {
+        throw new Error('タイトルは100文字以内にしてください。');
+      }
+
       const createdPost = await prisma.post.create({
         ...query,
         data: {

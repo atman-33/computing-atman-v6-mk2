@@ -1,5 +1,5 @@
 import { PostStatus } from '@prisma/client';
-import { ClientError } from 'graphql-request';
+import { ClientError, GraphQLResponse } from 'graphql-request';
 import { describe, expect, it, vi } from 'vitest';
 import { initializeClient } from '~/lib/graphql-client';
 import { CreatePostInput } from '~/lib/graphql/@generated/graphql';
@@ -62,18 +62,21 @@ describe('createPost', () => {
     //   new Error('GraphQL Client Error'),
     // );
 
-    const mockClientError = new ClientError(
-      {
-        errors: [
-          {
-            message: 'GraphQL Client Error',
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          } as any,
-        ],
-        status: 400,
-      },
-      { query: '' },
-    );
+    const mockResponse = {
+      errors: [
+        {
+          extensions: {
+            originalError: {
+              message: 'ClientrError mock',
+            },
+          },
+        },
+      ],
+    } as unknown as GraphQLResponse;
+
+    const mockClientError = new ClientError(mockResponse, {
+      query: '',
+    });
 
     // モックしたクライアントの作成
     const mockClient = {
@@ -89,7 +92,7 @@ describe('createPost', () => {
 
     // 検証
     expect(result.success).toBe(false);
-    console.log(result);
+    expect(result.error?.message).toBe('ClientrError mock');
     expect(result.error?.code).toBe('ClientError');
   });
 
