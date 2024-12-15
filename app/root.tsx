@@ -1,6 +1,6 @@
-import './tailwind.css';
+import tailwind from './tailwind.css?url';
 
-import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node';
+import type { LinksFunction, LoaderFunctionArgs, MetaFunction } from '@remix-run/node';
 import {
   json,
   Links,
@@ -11,8 +11,11 @@ import {
   useLoaderData,
 } from '@remix-run/react';
 import { useEffect, useState } from 'react';
+import { CustomToaster } from './components/shadcn/custom/custom-toaster';
 import { getSystemTheme } from './routes/resources.theme/services/system-theme';
 import { getThemeFromCookie } from './routes/resources.theme/services/theme.server';
+
+export const links: LinksFunction = () => [{ rel: 'stylesheet', href: tailwind }];
 
 export const meta: MetaFunction = () => {
   return [
@@ -48,6 +51,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         {children}
+        <CustomToaster />
         <ScrollRestoration />
         <Scripts />
       </body>

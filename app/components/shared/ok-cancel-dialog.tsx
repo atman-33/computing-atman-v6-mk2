@@ -15,7 +15,10 @@ interface OkCancelDialogProps {
   /** アラートダイアログのトリガー */
   children?: React.ReactNode;
   title?: string;
-  description: string;
+  /**
+   * 説明用のメッセージ。配列の要素ごとに改行される。
+   */
+  descriptions: string[];
   okText?: string;
   cancelText?: string;
   clickHandler: () => void;
@@ -24,7 +27,7 @@ interface OkCancelDialogProps {
 const OkCancelDialog = (props: OkCancelDialogProps) => {
   const [open, setOpen] = useState(false);
 
-  const { title, description, children, okText, cancelText, clickHandler } = props;
+  const { title, descriptions, children, okText, cancelText, clickHandler } = props;
 
   const handleOkClick = () => {
     if (clickHandler) {
@@ -39,7 +42,11 @@ const OkCancelDialog = (props: OkCancelDialogProps) => {
       <AlertDialogContent>
         <AlertDialogHeader>
           {title && <AlertDialogTitle>{title}</AlertDialogTitle>}
-          <AlertDialogDescription>{description}</AlertDialogDescription>
+          <AlertDialogDescription>
+            {descriptions.map((description, i) => (
+              <div key={i}>{description}</div>
+            ))}
+          </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel className="min-w-[80px] rounded-full">
