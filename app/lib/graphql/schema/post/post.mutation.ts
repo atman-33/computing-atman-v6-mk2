@@ -25,6 +25,10 @@ builder.mutationField('createPost', (t) =>
         throw new Error('タイトルは100文字以内にしてください。');
       }
 
+      if (Array.from(input.emoji).length > 1) {
+        throw new Error('絵文字は1文字以内にしてください。');
+      }
+
       const createdPost = await prisma.post.create({
         ...query,
         data: {
