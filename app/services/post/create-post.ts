@@ -33,7 +33,7 @@ const createPost = async (
       return createSuccessResponse(201, createPost);
     })
     .catch((error) => {
-      console.log(error);
+      // console.log(error);
       const errorMessage = getOriginalErrorMessage(error);
       if (errorMessage) {
         return createErrorResponse(errorMessage, 'ClientError', error);
