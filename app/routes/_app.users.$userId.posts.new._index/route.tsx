@@ -14,7 +14,7 @@ import { Spinner } from '~/components/shared/spinner';
 import { CreatePostInput, PostStatus, UpdatePostInput } from '~/lib/graphql/@generated/graphql';
 import { createPost } from '~/services/post/create-post';
 import { updatePost } from '~/services/post/update-post';
-import { getFormData } from '~/utils/form-data';
+import { parseFormData } from '~/utils/form-data';
 import { Preview } from './components/preview';
 import { useMarkdownValueStore } from './stores/markdown-value-store';
 
@@ -30,7 +30,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   if (postId) {
     // 更新
     const updatePostInput: UpdatePostInput = {
-      ...getFormData<UpdatePostInput>(form, ['postId']),
+      ...parseFormData<UpdatePostInput>(form, { excludeKeys: ['postId'] }),
       id: postId,
       status: PostStatus.Draft,
     };
@@ -40,7 +40,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   } else {
     // 新規作成
     const createPostInput: CreatePostInput = {
-      ...getFormData<CreatePostInput>(form, ['postId']),
+      ...parseFormData<CreatePostInput>(form, { excludeKeys: ['postId'] }),
       status: PostStatus.Draft,
     };
     const data = await createPost(createPostInput, request);

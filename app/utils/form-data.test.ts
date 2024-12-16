@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { getFormData } from './form-data';
+import { parseFormData } from './form-data';
 
 describe('getFormData', () => {
   it('should convert FormData to a typed object', () => {
@@ -16,7 +16,7 @@ describe('getFormData', () => {
     };
 
     // Act
-    const result = getFormData<FormDataType>(form);
+    const result = parseFormData<FormDataType>(form);
 
     // Assert
     expect(result).toEqual({
@@ -36,7 +36,7 @@ describe('getFormData', () => {
     };
 
     // Act
-    const result = getFormData<FormDataType>(form);
+    const result = parseFormData<FormDataType>(form);
 
     // Assert
     expect(result).toEqual({});
@@ -54,7 +54,7 @@ describe('getFormData', () => {
     };
 
     // Act
-    const result = getFormData<FormDataType>(form);
+    const result = parseFormData<FormDataType>(form);
 
     // Assert
     expect(result.name).toBe('Jane Doe');
@@ -72,7 +72,7 @@ describe('getFormData', () => {
     };
 
     // Act
-    const result = getFormData<FormDataType>(form, ['extraKey']);
+    const result = parseFormData<FormDataType>(form, { excludeKeys: ['extraKey'] });
 
     // Assert
     expect(result).toEqual({
