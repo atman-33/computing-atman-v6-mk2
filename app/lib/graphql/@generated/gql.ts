@@ -16,6 +16,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
 const documents = {
     "\n  query getTags {\n    tags {\n      id\n      image\n      name\n    }\n  }\n": types.GetTagsDocument,
     "\n  mutation createPost($input: CreatePostInput!) {\n    createPost(input: $input) {\n      id\n      title\n      emoji\n      content\n      status\n      createdAt\n      updatedAt\n    }\n  }\n": types.CreatePostDocument,
+    "\n  mutation updatePost($input: UpdatePostInput!) {\n    updatePost(input: $input) {\n      id\n      title\n      emoji\n      content\n      status\n      createdAt\n      updatedAt\n    }\n  }\n": types.UpdatePostDocument,
 };
 
 /**
@@ -40,6 +41,10 @@ export function graphql(source: "\n  query getTags {\n    tags {\n      id\n    
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  mutation createPost($input: CreatePostInput!) {\n    createPost(input: $input) {\n      id\n      title\n      emoji\n      content\n      status\n      createdAt\n      updatedAt\n    }\n  }\n"): (typeof documents)["\n  mutation createPost($input: CreatePostInput!) {\n    createPost(input: $input) {\n      id\n      title\n      emoji\n      content\n      status\n      createdAt\n      updatedAt\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation updatePost($input: UpdatePostInput!) {\n    updatePost(input: $input) {\n      id\n      title\n      emoji\n      content\n      status\n      createdAt\n      updatedAt\n    }\n  }\n"): (typeof documents)["\n  mutation updatePost($input: UpdatePostInput!) {\n    updatePost(input: $input) {\n      id\n      title\n      emoji\n      content\n      status\n      createdAt\n      updatedAt\n    }\n  }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

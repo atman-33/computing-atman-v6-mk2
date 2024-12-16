@@ -21,13 +21,7 @@ builder.mutationField('createPost', (t) =>
         throw new Error('required ctx.user');
       }
 
-      if (input.title.length > 100) {
-        throw new Error('タイトルは100文字以内にしてください。');
-      }
-
-      if (Array.from(input.emoji).length > 1) {
-        throw new Error('絵文字は1文字以内にしてください。');
-      }
+      validate(input);
 
       const createdPost = await prisma.post.create({
         ...query,
@@ -68,6 +62,8 @@ builder.mutationField('updatePost', (t) =>
     },
     authScopes: { loggedIn: true },
     resolve: async (query, _, { input }) => {
+      validate(input);
+
       const { id: rawId } = decodeGlobalID(input.id);
       const updatedPost = await prisma.post.update({
         ...query,
@@ -126,6 +122,16 @@ builder.mutationField('deletePost', (t) =>
     },
   }),
 );
+
+const validate = (input: { title?: string; emoji?: string }) => {
+  if (input.title && input.title.length > 100) {
+    throw new Error('タイトルは100文字以内にしてください。');
+  }
+
+  if (input.emoji && Array.from(input.emoji).length > 1) {
+    throw new Error('絵文字は1文字以内にしてください。');
+  }
+};
 
 export const loadPostMutation = () => {
   console.log('Post mutation loaded');
