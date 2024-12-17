@@ -20,7 +20,8 @@ import { useMarkdownValueStore } from './stores/markdown-value-store';
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   const userId = params.userId;
-  return json({ userId });
+  const postId = params.postId;
+  return json({ userId, postId });
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -54,11 +55,14 @@ export const action = async ({ request }: ActionFunctionArgs) => {
  * @returns
  */
 const PostNewPage = () => {
-  const { userId } = useLoaderData<typeof loader>();
+  const { userId, postId: urlPostId } = useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
   const navigate = useNavigate();
 
-  const [postId, setPostId] = useState<string | null>(null); // postId の状態管理
+  // NOTE: URLの$postIdが`new`の場合は新規作成として扱う。
+  const [postId, setPostId] = useState<string | undefined>(
+    urlPostId === 'new' ? undefined : urlPostId,
+  );
   const [errorMessage, setErrorMessage] = useState('');
   const { markdownValue, setMarkdownValue, parseMarkdown } = useMarkdownValueStore();
 
