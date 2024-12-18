@@ -72,9 +72,9 @@ const SignUpPage = () => {
           Create an account
         </h2>
         <ValidatedForm validator={signUpValidator} method="POST">
-          <TextField htmlFor="name" type="name" label="Name" />
-          <TextField htmlFor="email" label="Email" errorMessage={errors?.email} />
-          <TextField htmlFor="password" type="password" label="Password" />
+          <TextField name="name" type="name" label="Name" />
+          <TextField name="email" label="Email" errorMessage={errors?.email} />
+          <TextField name="password" type="password" label="Password" />
           <div className="mt-5 text-center">
             <Button variant="default" type="submit" name="_action" value="Sign Up">
               Create an account

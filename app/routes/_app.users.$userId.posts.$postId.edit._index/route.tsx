@@ -1,6 +1,7 @@
 import { ActionFunctionArgs, json, LoaderFunctionArgs } from '@remix-run/node';
-import { Form, useActionData, useLoaderData, useNavigate } from '@remix-run/react';
+import { useActionData, useLoaderData, useNavigate } from '@remix-run/react';
 import { useEffect, useState } from 'react';
+import { ValidatedForm } from 'remix-validated-form';
 import { toastError, toastSuccess } from '~/components/shadcn/custom/custom-toaster';
 import { SimpleTabsList, SimpleTabsTrigger } from '~/components/shadcn/custom/simple-tabs';
 import { Button } from '~/components/shadcn/ui/button';
@@ -8,7 +9,7 @@ import { Label } from '~/components/shadcn/ui/label';
 import { Tabs, TabsContent } from '~/components/shadcn/ui/tabs';
 import { Textarea } from '~/components/shadcn/ui/textarea';
 import { ClientOnly } from '~/components/shared/client-only';
-import { LabelInput } from '~/components/shared/label-input';
+import { LabelInputField } from '~/components/shared/label-input-filed';
 import { OkCancelDialog } from '~/components/shared/ok-cancel-dialog';
 import { Spinner } from '~/components/shared/spinner';
 import { CreatePostInput, PostStatus, UpdatePostInput } from '~/lib/graphql/@generated/graphql';
@@ -16,6 +17,7 @@ import { createPost } from '~/services/post/create-post';
 import { updatePost } from '~/services/post/update-post';
 import { parseFormData } from '~/utils/form-data';
 import { Preview } from './components/preview';
+import { postValidator } from './post-validator';
 import { useMarkdownValueStore } from './stores/markdown-value-store';
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
@@ -106,7 +108,11 @@ const PostNewPage = () => {
     <ClientOnly fallback={<Spinner />}>
       {() => (
         <div>
-          <Form className="flex h-[130dvh] flex-col gap-2" method="POST">
+          <ValidatedForm
+            validator={postValidator}
+            className="flex h-[130dvh] flex-col gap-2"
+            method="POST"
+          >
             {/* postId を隠しフィールドで送信 */}
             <input type="hidden" name="postId" value={postId ?? ''} />
             <div className="flex items-center justify-between">
@@ -132,8 +138,8 @@ const PostNewPage = () => {
                 </Button>
               </div>
             </div>
-            <LabelInput label="絵文字" id="emoji" placeholder="" type="text" />
-            <LabelInput label="タイトル" id="title" placeholder="" type="text" />
+            <LabelInputField label="絵文字" name="emoji" placeholder="" type="text" />
+            <LabelInputField label="タイトル" name="title" placeholder="" type="text" />
             <div className="flex grow flex-col gap-1.5">
               <div>
                 <Label>内容</Label>
@@ -172,7 +178,7 @@ const PostNewPage = () => {
                 </div>
               </div>
             </div>
-          </Form>
+          </ValidatedForm>
         </div>
       )}
     </ClientOnly>

@@ -189,23 +189,23 @@ import { Input } from '~/components/shadcn/ui/input';
 import { Label } from '~/components/shadcn/ui/label';
 
 type TextFieldProps = Readonly<{
-  htmlFor: string;
+  name: string;
   label: string;
   type?: ComponentProps<'input'>['type'];
   errorMessage?: string;
 }>;
 
-export const TextField: FC<TextFieldProps> = ({ htmlFor, label, type, errorMessage }) => {
+export const TextField: FC<TextFieldProps> = ({ name, label, type, errorMessage }) => {
   // NOTE: useFieldはValidatedForm内でのみ利用可能
-  const { error } = useField(htmlFor);
+  const { error } = useField(name);
 
   return (
     <div className="flex w-full flex-col">
-      <Label>{label}</Label>
+      <Label htmlFor={name}>{label}</Label>
       <Input
         type={type}
-        id={htmlFor}
-        name={htmlFor}
+        id={name}
+        name={name}
         className={`my-2 w-full rounded-xl border border-gray-300 p-2 outline-none ${!!error && 'border-red-500'}`}
       />
       {error && <span className="mb-2 text-red-500">{error}</span>}
@@ -277,8 +277,8 @@ const LoginPage = () => {
         <h2 className="text-black-600 mb-5 text-center text-3xl font-extrabold">Login</h2>
         <ValidatedForm validator={loginValidator} method="POST">
           <div className="flex flex-col gap-y-2">
-            <TextField htmlFor="email" label="Email" />
-            <TextField htmlFor="password" type="password" label="Password" />
+            <TextField name="email" label="Email" />
+            <TextField name="password" type="password" label="Password" />
             <Button variant="default" type="submit" name="_action" value="Sign In">
               Login
             </Button>
@@ -556,8 +556,8 @@ const LoginPage = () => {
         <h2 className="text-black-600 mb-5 text-center text-3xl font-extrabold">Login</h2>
         <ValidatedForm validator={loginValidator} method="POST">
           <div className="flex flex-col gap-y-2">
-            <TextField htmlFor="email" label="Email" />
-            <TextField htmlFor="password" type="password" label="Password" />
+            <TextField name="email" label="Email" />
+            <TextField name="password" type="password" label="Password" />
             <Button variant="default" type="submit" name="_action" value="Sign In">
               Login
             </Button>
@@ -744,9 +744,9 @@ const SignUpPage = () => {
           Create an account
         </h2>
         <ValidatedForm validator={signUpValidator} method="POST">
-          <TextField htmlFor="name" type="name" label="Name" />
-          <TextField htmlFor="email" label="Email" errorMessage={errors?.email} />
-          <TextField htmlFor="password" type="password" label="Password" />
+          <TextField name="name" type="name" label="Name" />
+          <TextField name="email" label="Email" errorMessage={errors?.email} />
+          <TextField name="password" type="password" label="Password" />
           <div className="mt-5 text-center">
             <Button variant="default" type="submit" name="_action" value="Sign Up">
               Create an account

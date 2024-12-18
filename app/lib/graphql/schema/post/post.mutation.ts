@@ -125,11 +125,11 @@ builder.mutationField('deletePost', (t) =>
 
 const validate = (input: { title?: string; emoji?: string }) => {
   if (input.title && input.title.length > 100) {
-    throw new Error('タイトルは100文字以内にしてください。');
+    throw new Error('タイトルは100文字以内にしてください');
   }
 
   if (input.emoji && Array.from(input.emoji).length > 1) {
-    throw new Error('絵文字は1文字以内にしてください。');
+    throw new Error('絵文字は1文字以内にしてください');
   }
 };
 
