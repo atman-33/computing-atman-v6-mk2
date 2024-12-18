@@ -49,7 +49,7 @@ export default config;
 `package.json`
 
 ```json
-    "---- TEST SECTION ----": "---- ---- ---- ---- ----",
+    "--- TEST SECTION ---": "--- --- --- --- ---",
     "test-jest": "jest"
 ```
 

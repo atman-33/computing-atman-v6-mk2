@@ -400,13 +400,13 @@ if (!SESSION_SECRET) {
 
 const authenticator = new Authenticator<Omit<User, 'password'>>(sessionStorage);
 
-// ---- FormStrategy ---- //
+// --- FormStrategy
 // ...
 
 // NOTE: フォームストラテジーには「user-pass」の名称を設定
 authenticator.use(formStrategy, 'user-pass');
 
-// ---- GoogleStrategy ---- //
+// --- GoogleStrategy
 if (!(env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET && env.CLIENT_URL)) {
   throw new Error('GOOGLE_CLIENT_ID、GOOGLE_CLIENT_SECRET、CLIENT_URLが設定されていません。');
 }

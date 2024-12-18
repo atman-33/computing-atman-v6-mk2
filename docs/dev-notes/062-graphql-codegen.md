@@ -40,7 +40,7 @@ main();
 ```json
   "scripts": {
     // ...
-    "---- GRAPHQL SECTION ----": "---- ---- ---- ---- ----",
+    "--- GRAPHQL SECTION ---": "--- --- --- --- ---",
     "graphql:schema": "tsx ./tools/graphql-codegen/export-schema.ts",
 ```
 

@@ -15,7 +15,7 @@ if (!SESSION_SECRET) {
 
 const authenticator = new Authenticator<Omit<User, 'password'>>(sessionStorage);
 
-// ---- FormStrategy ---- //
+// --- FormStrategy
 const formStrategy = new FormStrategy(async ({ form }) => {
   const email = form.get('email');
   const password = form.get('password');
@@ -47,7 +47,7 @@ const formStrategy = new FormStrategy(async ({ form }) => {
 // NOTE: フォームストラテジーには「user-pass」の名称を設定
 authenticator.use(formStrategy, 'user-pass');
 
-// ---- GoogleStrategy ---- //
+// --- GoogleStrategy
 if (!(env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET && env.CLIENT_URL)) {
   // console.log(`id: ${env.GOOGLE_CLIENT_ID}`);
   // console.log(`secret: ${env.GOOGLE_CLIENT_SECRET}`);
