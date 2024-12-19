@@ -41,7 +41,7 @@ const OkCancelDialog = (props: OkCancelDialogProps) => {
       <AlertDialogTrigger>{children}</AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          {title && <AlertDialogTitle>{title}</AlertDialogTitle>}
+          <AlertDialogTitle>{title ?? ''}</AlertDialogTitle>
           <AlertDialogDescription>
             {descriptions.map((description, i) => (
               <div key={i}>{description}</div>

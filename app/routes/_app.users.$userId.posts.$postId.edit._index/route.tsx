@@ -1,5 +1,5 @@
 import { ActionFunctionArgs, json, LoaderFunctionArgs } from '@remix-run/node';
-import { useActionData, useLoaderData, useNavigate } from '@remix-run/react';
+import { Link, useActionData, useFetcher, useLoaderData, useNavigate } from '@remix-run/react';
 import { useEffect, useState } from 'react';
 import { ValidatedForm } from 'remix-validated-form';
 import { toastError, toastSuccess } from '~/components/shadcn/custom/custom-toaster';
@@ -23,6 +23,10 @@ import { useMarkdownValueStore } from './stores/markdown-value-store';
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   const userId = params.userId;
   const postId = params.postId;
+  // console.log('loader postId:', postId);
+
+  // TODO: postIdが埋め込まれている場合は、既存データを取得する処理を追加
+
   return json({ userId, postId });
 };
 
@@ -56,17 +60,21 @@ export const action = async ({ request }: ActionFunctionArgs) => {
  * 記事作成ページ
  * @returns
  */
-const PostNewPage = () => {
+const PostEditPage = () => {
   const { userId, postId: urlPostId } = useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
   const navigate = useNavigate();
+  const fetcher = useFetcher();
 
   // NOTE: URLの$postIdが`new`の場合は新規作成として扱う。
-  const [postId, setPostId] = useState<string | undefined>(
-    urlPostId === 'new' ? undefined : urlPostId,
-  );
+  const [postId, setPostId] = useState<string | undefined>(undefined);
   const [errorMessage, setErrorMessage] = useState('');
   const { markdownValue, setMarkdownValue, parseMarkdown } = useMarkdownValueStore();
+
+  useEffect(() => {
+    // NOTE: loaderのpostIdが更新されたときにレンダリングをトリガー
+    setPostId(urlPostId === 'new' ? undefined : urlPostId);
+  }, [urlPostId]);
 
   useEffect(() => {
     parseMarkdown();
@@ -74,20 +82,24 @@ const PostNewPage = () => {
 
   useEffect(() => {
     if (actionData) {
-      if (actionData?.success) {
+      if (actionData.success) {
         setErrorMessage('');
         if (actionData.data?.id) {
           setPostId(actionData.data?.id); // サーバーから返却された postId を保存
-          toastSuccess('下書きを更新しました。');
-        } else {
           toastSuccess('下書きを保存しました。');
+          // NOTE: 下書き保存後はURLのpostIdを更新する。
+          fetcher.submit(
+            { targetUrl: `/users/${userId}/posts/${actionData.data?.id}/edit` },
+            { method: 'POST', action: '/resources/redirect' },
+          );
         }
       } else {
-        const message = actionData?.error?.message ?? 'unknwon error';
+        const message = actionData.error?.message ?? 'unknwon error';
         setErrorMessage(message);
         toastError(message);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [actionData]);
 
   const handleTextareaChange = (code: string) => {
@@ -113,7 +125,7 @@ const PostNewPage = () => {
             className="flex h-[130dvh] flex-col gap-2"
             method="POST"
           >
-            {/* postId を隠しフィールドで送信 */}
+            {/* NOTE: postId を隠しフィールドで送信 */}
             <input type="hidden" name="postId" value={postId ?? ''} />
             <div className="flex items-center justify-between">
               <OkCancelDialog
@@ -133,8 +145,8 @@ const PostNewPage = () => {
                 <Button variant="ghost" type="submit">
                   下書きに保存
                 </Button>
-                <Button variant="ghost" type="button">
-                  公開に進む
+                <Button variant="ghost" type="submit" disabled={!postId}>
+                  <Link to="./publish">公開に進む</Link>{' '}
                 </Button>
               </div>
             </div>
@@ -185,4 +197,4 @@ const PostNewPage = () => {
   );
 };
 
-export default PostNewPage;
+export default PostEditPage;
