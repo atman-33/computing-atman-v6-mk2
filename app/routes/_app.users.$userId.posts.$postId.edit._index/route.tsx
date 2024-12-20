@@ -1,5 +1,5 @@
 import { ActionFunctionArgs, json, LoaderFunctionArgs } from '@remix-run/node';
-import { Link, useActionData, useFetcher, useLoaderData, useNavigate } from '@remix-run/react';
+import { redirect, useActionData, useLoaderData, useNavigate } from '@remix-run/react';
 import { useEffect, useState } from 'react';
 import { ValidatedForm } from 'remix-validated-form';
 import { toastError, toastSuccess } from '~/components/shadcn/custom/custom-toaster';
@@ -30,29 +30,42 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
   return json({ userId, postId });
 };
 
-export const action = async ({ request }: ActionFunctionArgs) => {
+export const action = async ({ request, params }: ActionFunctionArgs) => {
   const form = await request.formData();
-  const postId = form.get('postId') as string | null;
+  const postId = form.get('postId') as string;
+  const action = form.get('_action') as 'back' | 'save' | 'publish';
 
-  if (postId) {
-    // 更新
-    const updatePostInput: UpdatePostInput = {
-      ...parseFormData<UpdatePostInput>(form, { excludeKeys: ['postId'] }),
-      id: postId,
-      status: PostStatus.Draft,
-    };
-    const data = await updatePost(updatePostInput, request);
-    // console.log(data);
-    return json(data);
-  } else {
-    // 新規作成
-    const createPostInput: CreatePostInput = {
-      ...parseFormData<CreatePostInput>(form, { excludeKeys: ['postId'] }),
-      status: PostStatus.Draft,
-    };
-    const data = await createPost(createPostInput, request);
-    // console.log(data);
-    return json(data);
+  switch (action) {
+    case 'back':
+    case 'save':
+      if (postId) {
+        // データ更新
+        const updatePostInput: UpdatePostInput = {
+          ...parseFormData<UpdatePostInput>(form, { excludeKeys: ['postId', '_action'] }),
+          id: postId,
+          status: PostStatus.Draft,
+        };
+        const data = await updatePost(updatePostInput, request);
+        return json(data);
+      } else {
+        // データ新規作成
+        const createPostInput: CreatePostInput = {
+          ...parseFormData<CreatePostInput>(form, { excludeKeys: ['postId', '_action'] }),
+          status: PostStatus.Draft,
+        };
+        const data = await createPost(createPostInput, request);
+        return json(data);
+      }
+    case 'publish': {
+      // データ更新してからリダイレクト
+      const updatePostInput: UpdatePostInput = {
+        ...parseFormData<UpdatePostInput>(form, { excludeKeys: ['postId', '_action'] }),
+        id: postId,
+        status: PostStatus.Draft,
+      };
+      await updatePost(updatePostInput, request);
+      return redirect(`/users/${params.userId}/posts/${postId}/edit/publish`);
+    }
   }
 };
 
@@ -64,22 +77,30 @@ const PostEditPage = () => {
   const { userId, postId: urlPostId } = useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
   const navigate = useNavigate();
-  const fetcher = useFetcher();
 
-  // NOTE: URLの$postIdが`new`の場合は新規作成として扱う。
   const [postId, setPostId] = useState<string | undefined>(undefined);
   const [errorMessage, setErrorMessage] = useState('');
   const { markdownValue, setMarkdownValue, parseMarkdown } = useMarkdownValueStore();
 
+  /**
+   * URLのpostIdが変更されたときにpostIdを更新（レンダリングトリガー）。
+   * この処理によって、公開ボタンのdesabled属性が更新される。
+   */
   useEffect(() => {
-    // NOTE: loaderのpostIdが更新されたときにレンダリングをトリガー
+    // NOTE: URLの$postIdが`new`の場合は新規作成として扱う。
     setPostId(urlPostId === 'new' ? undefined : urlPostId);
   }, [urlPostId]);
 
+  /**
+   * マークダウンの初回パース処理。レンダリング後にマークダウンのCSSを反映させる。
+   */
   useEffect(() => {
     parseMarkdown();
   }, [parseMarkdown]);
 
+  /**
+   * 下書き保存ボタンクリック時にactionから返ってきたデータの処理
+   */
   useEffect(() => {
     if (actionData) {
       if (actionData.success) {
@@ -88,10 +109,12 @@ const PostEditPage = () => {
           setPostId(actionData.data?.id); // サーバーから返却された postId を保存
           toastSuccess('下書きを保存しました。');
           // NOTE: 下書き保存後はURLのpostIdを更新する。
-          fetcher.submit(
-            { targetUrl: `/users/${userId}/posts/${actionData.data?.id}/edit` },
-            { method: 'POST', action: '/resources/redirect' },
-          );
+          navigate(`/users/${userId}/posts/${actionData.data?.id}/edit`);
+          // NOTE: 下記のfetchr.submitを使ってリダイレクトする方法もあるが、navigateの方がシンプル
+          // fetcher.submit(
+          //   { targetUrl: `/users/${userId}/posts/${actionData.data?.id}/edit` },
+          //   { method: 'POST', action: '/resources/redirect' },
+          // );
         }
       } else {
         const message = actionData.error?.message ?? 'unknwon error';
@@ -102,17 +125,28 @@ const PostEditPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [actionData]);
 
+  /**
+   * テキストエリアの変更イベントを処理する。
+   * この関数は提供されたコードでマークダウンの値の状態を更新し、その後マークダウンを解析する。
+   * @param code
+   */
   const handleTextareaChange = (code: string) => {
     setMarkdownValue(code);
     parseMarkdown();
   };
 
+  /**
+   * 戻るボタンクリック時の処理。現在のユーザーの投稿一覧ページに遷移する。
+   */
   const handleBackClick = () => {
     navigate(`/users/${userId}/posts`);
   };
 
+  /**
+   * プレビューを表示するタブをクリックしたときの処理。
+   * タブ切替後はparseMarkdown()を呼び出してコードブロックコピーを有効化する。
+   */
   const handlePreviewClick = () => {
-    // NOTE: タブ切替後はparseMarkdown()を呼び出してコードコピーを有効化する。
     parseMarkdown();
   };
 
@@ -137,16 +171,22 @@ const PostEditPage = () => {
                   errorMessage && `error: ${errorMessage}`,
                 ]}
               >
-                <Button variant="ghost" type="submit">
+                <Button variant="ghost" type="submit" name="_action" value="back">
                   戻る
                 </Button>
               </OkCancelDialog>
               <div className="flex gap-4">
-                <Button variant="ghost" type="submit">
+                <Button variant="ghost" type="submit" name="_action" value="save">
                   下書きに保存
                 </Button>
-                <Button variant="ghost" type="submit" disabled={!postId}>
-                  <Link to="./publish">公開に進む</Link>{' '}
+                <Button
+                  variant="ghost"
+                  type="submit"
+                  disabled={!postId}
+                  name="_action"
+                  value="publish"
+                >
+                  公開に進む
                 </Button>
               </div>
             </div>
