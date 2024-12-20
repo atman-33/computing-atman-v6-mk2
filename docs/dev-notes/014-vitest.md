@@ -17,7 +17,7 @@ npm i -D vitest
 `package.json`
 
 ```json
-    "---- TEST SECTION ----": "---- ---- ---- ---- ----",
+    "--- TEST SECTION ---": "--- --- --- --- ---",
     "test": "vitest"
 ```
 

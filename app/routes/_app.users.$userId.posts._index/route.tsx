@@ -16,7 +16,7 @@ const UserPosts = () => {
   return (
     <>
       <div>
-        <Link to="./new">
+        <Link to="./new/edit">
           <Button variant="ghost">新規投稿</Button>
         </Link>
       </div>

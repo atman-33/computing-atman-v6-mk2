@@ -73,8 +73,8 @@ const LoginPage = () => {
         <h2 className="text-black-600 mb-5 text-center text-3xl font-extrabold">Login</h2>
         <ValidatedForm validator={loginValidator} method="POST">
           <div className="flex flex-col">
-            <TextField htmlFor="email" label="Email" />
-            <TextField htmlFor="password" type="password" label="Password" />
+            <TextField name="email" label="Email" />
+            <TextField name="password" type="password" label="Password" />
             <Button
               variant="default"
               type="submit"

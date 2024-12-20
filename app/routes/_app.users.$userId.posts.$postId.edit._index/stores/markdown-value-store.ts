@@ -10,12 +10,12 @@ import { create } from 'zustand';
 import { highlighter } from '~/lib/highlighter';
 import { transformerAddCopyButton } from '~/lib/shiki-transformers/transformer-add-copy-button';
 
-type MarkdownValueStore = {
+interface MarkdownValueStore {
   markdownValue: string;
   setMarkdownValue: (value: string) => void;
   sanitizedHtml: string;
   parseMarkdown: () => void;
-};
+}
 
 export const useMarkdownValueStore = create<MarkdownValueStore>((set, get) => {
   // Marked インスタンスの初期化

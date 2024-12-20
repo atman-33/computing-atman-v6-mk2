@@ -11,7 +11,7 @@
 ```json
   "scripts": {
     // ...
-    "---- CI SECTION ----": "---- ---- ---- ---- ----",
+    "--- CI SECTION ---": "--- --- --- --- ---",
     "ci:lint": "npm run lint",
     "ci:build": "npx env-cmd -f .env.example npm run build",
     "ci:test": "npm run test",

@@ -13,7 +13,7 @@
 ```json
   "scripts": {
     ...
-    "---- CD SECTION ----": "---- ---- ---- ---- ----",
+    "--- CD SECTION ---": "--- --- --- --- ---",
     "cd:build": "npm run build",
     "cd:start": "npm run start"
   },

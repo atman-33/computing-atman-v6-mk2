@@ -1,12 +1,12 @@
 import { initializeClient } from '~/lib/graphql-client';
 import { getOriginalErrorMessage } from '~/lib/graphql-client/client-error';
 import { graphql } from '~/lib/graphql/@generated';
-import { CreatePostInput, CreatePostMutation } from '~/lib/graphql/@generated/graphql';
+import { UpdatePostInput, UpdatePostMutation } from '~/lib/graphql/@generated/graphql';
 import { ApiResponse, createErrorResponse, createSuccessResponse } from '~/utils/api-response';
 
-const createPostGql = graphql(`
-  mutation createPost($input: CreatePostInput!) {
-    createPost(input: $input) {
+const updatePostGql = graphql(`
+  mutation updatePost($input: UpdatePostInput!) {
+    updatePost(input: $input) {
       id
       title
       emoji
@@ -18,19 +18,19 @@ const createPostGql = graphql(`
   }
 `);
 
-type CreatePostResult = CreatePostMutation['createPost'];
+type UpdatePostResult = UpdatePostMutation['updatePost'];
 
-const createPost = async (
-  input: CreatePostInput,
+const updatePost = async (
+  input: UpdatePostInput,
   request?: Request,
-): Promise<ApiResponse<CreatePostResult>> => {
+): Promise<ApiResponse<UpdatePostResult>> => {
   const client = await initializeClient(request);
   return await client
-    .request(createPostGql, {
+    .request(updatePostGql, {
       input,
     })
-    .then(({ createPost }) => {
-      return createSuccessResponse(201, createPost);
+    .then(({ updatePost }) => {
+      return createSuccessResponse(200, updatePost);
     })
     .catch((error) => {
       // console.log(error);
@@ -43,4 +43,4 @@ const createPost = async (
     });
 };
 
-export { createPost };
+export { updatePost };
