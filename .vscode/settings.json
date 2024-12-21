@@ -1,3 +1,15 @@
 {
-  "jest.runMode": "on-demand"
+  "markdownlint.lintWorkspaceGlobs": [
+    "**/*.{md,mkd,mdwn,mdown,markdown,markdn,mdtxt,mdtext,workbook}",
+    "!**/*.code-search",
+    "!**/bower_components",
+    "!**/node_modules",
+    "!**/.git",
+    "!**/vendor",
+    "!**/.github",
+  ],
+  "markdownlint.config": {
+    "MD033": false,
+    "MD041": false
+  },
 }
