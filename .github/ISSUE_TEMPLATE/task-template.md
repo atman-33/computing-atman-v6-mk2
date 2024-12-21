@@ -7,12 +7,6 @@ assignees: ''
 
 ---
 
-### Task Name
-Provide a concise name for the task.
-
-### Summary
-Briefly describe the purpose and details of the task.
-
 ### Subtasks
 - [ ] Subtask 1
 - [ ] Subtask 2
