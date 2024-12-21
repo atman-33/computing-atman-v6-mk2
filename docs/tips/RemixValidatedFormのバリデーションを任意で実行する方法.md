@@ -1,4 +1,4 @@
-# ValidatedFormのバリデーションを任意で実行する方法
+# RemixValidatedFormのバリデーションを任意で実行する方法
 
 ## サンプルコード
 

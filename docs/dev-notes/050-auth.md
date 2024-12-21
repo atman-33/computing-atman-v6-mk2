@@ -767,3 +767,199 @@ const SignUpPage = () => {
 
 export default SignUpPage;
 ```
+
+## Remix validated formではなく、Comformを利用する場合
+
+### Confromをインストール
+
+```sh
+npm i @conform-to/react @conform-to/zod
+```
+
+### バリデーションスキーマを組み込んだFormを返すフックを作成
+
+`app/routes/auth.login._index/hooks/use-login-form.ts`
+
+```ts
+import { useForm } from '@conform-to/react';
+import { parseWithZod } from '@conform-to/zod';
+import { useEffect } from 'react';
+import { z } from 'zod';
+
+const loginFormSchema = z.object({
+  email: z
+    .string({ required_error: 'メールアドレスは必須入力です' })
+    .email('メールアドレスを正しい形式で入力してください')
+    .max(128, 'メールアドレスは128文字以下で入力してください'),
+  password: z
+    .string({ required_error: 'パスワードは必須入力です' })
+    .min(8, 'パスワードは8文字以上で入力してください')
+    .max(128, 'パスワードは128文字以下で入力してください')
+    .refine(
+      (password: string) => /[A-Za-z]/.test(password) && /[0-9]/.test(password),
+      'パスワードは半角英数字の両方を含めてください',
+    ),
+});
+
+const useLoginForm = () => {
+  const form = useForm({
+    onValidate({ formData }) {
+      return parseWithZod(formData, { schema: loginFormSchema });
+    },
+  });
+
+  useEffect(() => {
+    form[0].reset();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return form;
+};
+
+export { useLoginForm };
+```
+
+### Conformに対応したラベル付きインプットコンポーネントを作成
+
+`app/components/shared/conform/label-input.tsx`
+
+```tsx
+import { FieldMetadata, getInputProps } from '@conform-to/react';
+import { Input } from '~/components/shadcn/ui/input';
+import { Label } from '~/components/shadcn/ui/label';
+
+interface LabelInputProps<Schema> {
+  metadata: FieldMetadata<Schema>;
+  options: {
+    type:
+      | 'number'
+      | 'search'
+      | 'color'
+      | 'date'
+      | 'datetime-local'
+      | 'email'
+      | 'file'
+      | 'hidden'
+      | 'month'
+      | 'password'
+      | 'range'
+      | 'tel'
+      | 'text'
+      | 'time'
+      | 'url'
+      | 'week';
+    value?: boolean | undefined;
+  };
+  label: string;
+  placeholder?: string;
+}
+
+/**
+ * Conformに対応したラベル付きインプット
+ * @param param0
+ * @returns
+ */
+const LabelInput = <Schema,>({
+  metadata,
+  options,
+  label,
+  placeholder,
+}: LabelInputProps<Schema>) => {
+  const inputProps = getInputProps(metadata, options);
+  return (
+    <div className="flex w-full flex-col">
+      <Label htmlFor={inputProps.id}>{label}</Label>
+      <Input
+        {...inputProps}
+        placeholder={placeholder}
+        className={`my-2 w-full rounded-xl border border-gray-300 p-2 outline-none ${!!metadata.errors && 'border-red-500'}`}
+      />
+      {metadata.errors && (
+        <div>
+          {metadata.errors.map((e, index) => (
+            <p key={index} className="mb-2 text-red-500">
+              {e}
+            </p>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default LabelInput;
+```
+
+### ページコンポーネントにバリデーションFormとインプットコンポーネントを適用
+
+`app/routes/auth.login._index/route.tsx`
+
+```tsx
+import { getFormProps } from '@conform-to/react';
+import { ActionFunctionArgs, json, LoaderFunctionArgs, MetaFunction } from '@remix-run/node';
+import { Form, Link, useActionData } from '@remix-run/react';
+import { AlertCircle } from 'lucide-react';
+import { AuthorizationError } from 'remix-auth';
+import { Alert, AlertDescription, AlertTitle } from '~/components/shadcn/ui/alert';
+import { Button } from '~/components/shadcn/ui/button';
+import LabelInput from '~/components/shared/conform/label-input';
+import { authenticator } from '../auth/services/auth.server';
+import { GoogleForm } from './google-form';
+import { useLoginForm } from './hooks/use-login-form';
+
+export const meta: MetaFunction = () => {
+  return [{ title: 'New Remix App login' }];
+};
+
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  // ...
+};
+
+export const action = async ({ request }: ActionFunctionArgs) => {
+  // ...
+};
+
+const LoginPage = () => {
+  const data = useActionData<typeof action>() as { message?: string };
+  const [form, { email, password }] = useLoginForm();
+
+  return (
+    <div className="flex h-full flex-col items-center justify-center gap-y-5">
+      <div className="w-[420px] rounded-2xl bg-white p-6">
+        <h2 className="text-black-600 mb-5 text-center text-3xl font-extrabold">Login</h2>
+        <Form method="POST" {...getFormProps(form)}>
+          <div className="flex flex-col">
+            <LabelInput metadata={email} options={{ type: 'email' }} label="Email" />
+            <LabelInput metadata={password} options={{ type: 'password' }} label="Password" />
+            <Button
+              variant="default"
+              type="submit"
+              name="_action"
+              value="Sign In"
+              className="mt-4 self-center"
+            >
+              Login
+            </Button>
+            {data?.message && (
+              <Alert variant="destructive" className="my-2">
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>Error</AlertTitle>
+                <AlertDescription>{data.message}</AlertDescription>
+              </Alert>
+            )}
+          </div>
+        </Form>
+        <GoogleForm />
+      </div>
+      <p className="text-gray-600">
+        {`Don't have an account? `}
+        <Link to="/auth/signup">
+          <span className="px-2 text-primary hover:underline">Sign Up</span>
+        </Link>
+      </p>
+    </div>
+  );
+};
+
+export default LoginPage;
+```

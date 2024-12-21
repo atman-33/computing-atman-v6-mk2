@@ -6,7 +6,8 @@ import { PostList } from './components/post-list';
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   const userId = params.userId;
-  const posts = await mockPosts;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const posts: any = await mockPosts;
   return json({ userId, posts });
 };
 
