@@ -1,14 +1,14 @@
+import { mockPosts } from '~/mock/posts';
 import { PostListItem } from './post-list-item';
 
 /**
  * ページ毎の表示件数（ポスト数）
  */
-const POSTS_PER_PAGE = 20;
+// const POSTS_PER_PAGE = 20;
 
 interface PostListProps {
-  // TODO: 後で post の型を設定すること。
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  posts: any;
+  posts: typeof mockPosts;
 }
 
 const PostList = ({ posts }: PostListProps) => {

@@ -1,7 +1,7 @@
+import { getFormProps } from '@conform-to/react';
 import { ActionFunctionArgs, json, LoaderFunctionArgs } from '@remix-run/node';
-import { redirect, useActionData, useLoaderData, useNavigate } from '@remix-run/react';
+import { Form, redirect, useActionData, useLoaderData, useNavigate } from '@remix-run/react';
 import { useEffect, useState } from 'react';
-import { ValidatedForm } from 'remix-validated-form';
 import { toastError, toastSuccess } from '~/components/shadcn/custom/custom-toaster';
 import { SimpleTabsList, SimpleTabsTrigger } from '~/components/shadcn/custom/simple-tabs';
 import { Button } from '~/components/shadcn/ui/button';
@@ -9,7 +9,7 @@ import { Label } from '~/components/shadcn/ui/label';
 import { Tabs, TabsContent } from '~/components/shadcn/ui/tabs';
 import { Textarea } from '~/components/shadcn/ui/textarea';
 import { ClientOnly } from '~/components/shared/client-only';
-import { LabelInputField } from '~/components/shared/label-input-filed';
+import LabelInput from '~/components/shared/conform/label-input';
 import { OkCancelDialog } from '~/components/shared/ok-cancel-dialog';
 import { Spinner } from '~/components/shared/spinner';
 import { CreatePostInput, PostStatus, UpdatePostInput } from '~/lib/graphql/@generated/graphql';
@@ -17,7 +17,7 @@ import { createPost } from '~/services/post/create-post';
 import { updatePost } from '~/services/post/update-post';
 import { parseFormData } from '~/utils/form-data';
 import { Preview } from './components/preview';
-import { postValidator } from './post-validator';
+import { usePostForm } from './hooks/use-post-form';
 import { useMarkdownValueStore } from './stores/markdown-value-store';
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
@@ -77,14 +77,16 @@ const PostEditPage = () => {
   const { userId, postId: urlPostId } = useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
   const navigate = useNavigate();
-
   const [postId, setPostId] = useState<string | undefined>(undefined);
   const [errorMessage, setErrorMessage] = useState('');
+  const [form, { emoji, title }] = usePostForm();
   const { markdownValue, setMarkdownValue, parseMarkdown } = useMarkdownValueStore();
 
+  // NOTE: Conformのバリデーションエラーをコンソール出力しないと画面に表示されない。
+  console.log(form.allErrors);
+
   /**
-   * URLのpostIdが変更されたときにpostIdを更新（レンダリングトリガー）。
-   * この処理によって、公開ボタンのdesabled属性が更新される。
+   * URLのpostId変更時にpostIdを更新する。同時に公開ボタンのdesabled属性が更新される。
    */
   useEffect(() => {
     // NOTE: URLの$postIdが`new`の場合は新規作成として扱う。
@@ -99,7 +101,7 @@ const PostEditPage = () => {
   }, [parseMarkdown]);
 
   /**
-   * 下書き保存ボタンクリック時にactionから返ってきたデータの処理
+   * 下書き保存ボタンクリック時にactionから返ってきたデータを処理する。
    */
   useEffect(() => {
     if (actionData) {
@@ -126,8 +128,7 @@ const PostEditPage = () => {
   }, [actionData]);
 
   /**
-   * テキストエリアの変更イベントを処理する。
-   * この関数は提供されたコードでマークダウンの値の状態を更新し、その後マークダウンを解析する。
+   * テキストエリアの変更時に、マークダウンの値を更新し、その後マークダウンを解析する。
    * @param code
    */
   const handleTextareaChange = (code: string) => {
@@ -143,10 +144,10 @@ const PostEditPage = () => {
   };
 
   /**
-   * プレビューを表示するタブをクリックしたときの処理。
-   * タブ切替後はparseMarkdown()を呼び出してコードブロックコピーを有効化する。
+   * プレビュータブをクリックしたときの処理。
    */
   const handlePreviewClick = () => {
+    // NOTE: コードブロックのコピー機能を有効化するためにparseMarkdown()を呼び出す。
     parseMarkdown();
   };
 
@@ -154,11 +155,7 @@ const PostEditPage = () => {
     <ClientOnly fallback={<Spinner />}>
       {() => (
         <div>
-          <ValidatedForm
-            validator={postValidator}
-            className="flex h-[130dvh] flex-col gap-2"
-            method="POST"
-          >
+          <Form {...getFormProps(form)} className="flex h-[130dvh] flex-col gap-2" method="POST">
             {/* NOTE: postId を隠しフィールドで送信 */}
             <input type="hidden" name="postId" value={postId ?? ''} />
             <div className="flex items-center justify-between">
@@ -190,8 +187,13 @@ const PostEditPage = () => {
                 </Button>
               </div>
             </div>
-            <LabelInputField label="絵文字" name="emoji" placeholder="" type="text" />
-            <LabelInputField label="タイトル" name="title" placeholder="" type="text" />
+            <LabelInput metadata={emoji} options={{ type: 'text' }} label="絵文字" placeholder="" />
+            <LabelInput
+              metadata={title}
+              options={{ type: 'text' }}
+              label="タイトル"
+              placeholder=""
+            />
             <div className="flex grow flex-col gap-1.5">
               <div>
                 <Label>内容</Label>
@@ -230,7 +232,7 @@ const PostEditPage = () => {
                 </div>
               </div>
             </div>
-          </ValidatedForm>
+          </Form>
         </div>
       )}
     </ClientOnly>

@@ -1,12 +1,14 @@
+import { getFormProps } from '@conform-to/react';
 import { ActionFunctionArgs, LoaderFunctionArgs, json } from '@remix-run/node';
-import { Link, useActionData } from '@remix-run/react';
-import { ValidatedForm } from 'remix-validated-form';
+import { Form, Link, useActionData } from '@remix-run/react';
+import { AlertCircle } from 'lucide-react';
+import { Alert, AlertDescription, AlertTitle } from '~/components/shadcn/ui/alert';
 import { Button } from '~/components/shadcn/ui/button';
+import LabelInput from '~/components/shared/conform/label-input';
 import { GoogleForm } from '../auth.login._index/google-form';
-import { TextField } from '../auth/components/text-field';
 import { authenticator } from '../auth/services/auth.server';
 import { createUser } from '../auth/services/signup.server';
-import { signUpValidator } from './sign-up-validator';
+import { useSignUpForm } from './hooks/use-sign-up-form';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const user = await authenticator.isAuthenticated(request, {
@@ -64,6 +66,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 const SignUpPage = () => {
   const actionData = useActionData<typeof action>();
   const errors = (actionData as { errors?: { [key: string]: string } })?.errors;
+  const [form, { name, email, password }] = useSignUpForm();
 
   return (
     <div className="flex h-full flex-col items-center justify-center gap-y-5">
@@ -71,16 +74,29 @@ const SignUpPage = () => {
         <h2 className="text-black-600 mb-5 text-center text-3xl font-extrabold">
           Create an account
         </h2>
-        <ValidatedForm validator={signUpValidator} method="POST">
-          <TextField name="name" type="name" label="Name" />
-          <TextField name="email" label="Email" errorMessage={errors?.email} />
-          <TextField name="password" type="password" label="Password" />
-          <div className="mt-5 text-center">
-            <Button variant="default" type="submit" name="_action" value="Sign Up">
+        <Form method="POST" {...getFormProps(form)}>
+          <div className="flex flex-col">
+            <LabelInput metadata={name} options={{ type: 'text' }} label="Name" />
+            <LabelInput metadata={email} options={{ type: 'email' }} label="Email" />
+            <LabelInput metadata={password} options={{ type: 'password' }} label="Password" />
+            <Button
+              variant="default"
+              type="submit"
+              name="_action"
+              value="Sign Up"
+              className="mt-4 self-center"
+            >
               Create an account
             </Button>
+            {errors?.email && (
+              <Alert variant="destructive" className="my-2">
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>Error</AlertTitle>
+                <AlertDescription>{errors?.email}</AlertDescription>
+              </Alert>
+            )}
           </div>
-        </ValidatedForm>
+        </Form>
         <GoogleForm />
       </div>
       <p className="text-gray-600">

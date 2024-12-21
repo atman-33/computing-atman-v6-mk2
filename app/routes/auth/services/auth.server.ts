@@ -62,7 +62,7 @@ const googleStrategy = new GoogleStrategy<User>(
     callbackURL: `${env.CLIENT_URL}/api/auth/google/callback`,
   },
   async ({ profile }) => {
-    console.log('google strategy start...');
+    // console.log('google strategy start...');
     // console.log('profile:', JSON.stringify(profile));
 
     try {

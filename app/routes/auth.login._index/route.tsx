@@ -1,14 +1,14 @@
+import { getFormProps } from '@conform-to/react';
 import { ActionFunctionArgs, json, LoaderFunctionArgs, MetaFunction } from '@remix-run/node';
-import { Link, useActionData } from '@remix-run/react';
+import { Form, Link, useActionData } from '@remix-run/react';
 import { AlertCircle } from 'lucide-react';
 import { AuthorizationError } from 'remix-auth';
-import { ValidatedForm } from 'remix-validated-form';
 import { Alert, AlertDescription, AlertTitle } from '~/components/shadcn/ui/alert';
 import { Button } from '~/components/shadcn/ui/button';
-import { TextField } from '../auth/components/text-field';
+import LabelInput from '~/components/shared/conform/label-input';
 import { authenticator } from '../auth/services/auth.server';
 import { GoogleForm } from './google-form';
-import { loginValidator } from './login-validator';
+import { useLoginForm } from './hooks/use-login-form';
 
 export const meta: MetaFunction = () => {
   return [{ title: 'New Remix App login' }];
@@ -32,14 +32,14 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   try {
     switch (action) {
       case 'Sign In':
-        console.log('Sign In...');
+        // console.log('Sign In...');
         return await authenticator.authenticate('user-pass', request, {
           successRedirect: '/',
           // failureRedirect: '/auth/login',
         });
 
       case 'Sign In Google':
-        console.log('Sign In Google...');
+        // console.log('Sign In Google...');
         return await authenticator.authenticate('google', request);
 
       default:
@@ -66,15 +66,16 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
 const LoginPage = () => {
   const data = useActionData<typeof action>() as { message?: string };
+  const [form, { email, password }] = useLoginForm();
 
   return (
     <div className="flex h-full flex-col items-center justify-center gap-y-5">
       <div className="w-[420px] rounded-2xl bg-white p-6">
         <h2 className="text-black-600 mb-5 text-center text-3xl font-extrabold">Login</h2>
-        <ValidatedForm validator={loginValidator} method="POST">
+        <Form method="POST" {...getFormProps(form)}>
           <div className="flex flex-col">
-            <TextField name="email" label="Email" />
-            <TextField name="password" type="password" label="Password" />
+            <LabelInput metadata={email} options={{ type: 'email' }} label="Email" />
+            <LabelInput metadata={password} options={{ type: 'password' }} label="Password" />
             <Button
               variant="default"
               type="submit"
@@ -92,7 +93,7 @@ const LoginPage = () => {
               </Alert>
             )}
           </div>
-        </ValidatedForm>
+        </Form>
         <GoogleForm />
       </div>
       <p className="text-gray-600">
