@@ -4,11 +4,12 @@ Remix で、 favicon を設定する方法です。
 
 ## 参考URL
 
-[favicon-converter](https://favicon.io/favicon-converter/)  
-
-[favicon generator](https://realfavicongenerator.net/)
+- [favicon-converter](https://favicon.io/favicon-converter/)  
+- [favicon generator](https://realfavicongenerator.net/)
 
 > favicon generator では、 safari-pinned-tab.svg ファイルも作成可能
+
+- [Remix links](https://remix.run/docs/zh/main/route/links#links)
 
 ## ステップ
 
@@ -41,7 +42,18 @@ Remix で、 favicon を設定する方法です。
       ],
     ```
 
-4. `public/favicons/favicon.ico`を`public/favicon.ico`にコピーしておく。
+4. `root.tsx`のlinksにfaviconを設定する。
+
+    `app/root.tsx`
+
+    ```tsx
+    // ...
+    export const links: LinksFunction = () => [
+    { rel: 'icon', href: '/favicons/favicon.ico', type: 'image/png' },
+    { rel: 'stylesheet', href: tailwind },
+    ];
+    // ...
+    ```
 
 ## 参考. Next.jsでfaviconを適用する方法
 
