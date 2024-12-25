@@ -1,18 +1,29 @@
 import { json, LoaderFunctionArgs } from '@remix-run/node';
 import { Link, useLoaderData } from '@remix-run/react';
 import { Button } from '~/components/shadcn/ui/button';
-import { mockPosts } from '~/mock/posts';
+import { getPostsByUser } from '~/services/post/get-posts-by-user';
 import { PostList } from './components/post-list';
 
-export const loader = async ({ params }: LoaderFunctionArgs) => {
+/** ページ毎の表示件数（ポスト数）*/
+const POSTS_PER_PAGE = 2;
+
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
+  const url = new URL(request.url);
   const userId = params.userId;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const posts: any = await mockPosts;
-  return json({ userId, posts });
+  const first = parseInt(url.searchParams.get('first') || POSTS_PER_PAGE.toString(), 10);
+  const after = url.searchParams.get('after') ?? undefined;
+
+  if (userId) {
+    const data = await getPostsByUser({ userId }, first, after, request);
+    return json(data);
+  }
+
+  throw new Error('ユーザーIDが指定されていません');
 };
 
 const UserPosts = () => {
-  const { posts } = useLoaderData<typeof loader>();
+  const loaderData = useLoaderData<typeof loader>();
+  loaderData.data?.edges;
   // console.log(userId);
   return (
     <>
@@ -22,7 +33,9 @@ const UserPosts = () => {
         </Link>
       </div>
       <div>
-        <PostList posts={posts} />
+        {loaderData.data?.pageInfo && (
+          <PostList posts={loaderData.data?.edges} pageInfo={loaderData.data.pageInfo} />
+        )}
       </div>
     </>
   );

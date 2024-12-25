@@ -12,6 +12,8 @@ const getPostGql = graphql(`
       title
       status
       content
+      createdAt
+      updatedAt
       tags {
         tag {
           id

@@ -1,17 +1,14 @@
-import { mockPosts } from '~/mock/posts';
+import { Link } from '@remix-run/react';
+import { PostEdges, PostsPageInfo } from '../types';
 import { PostListItem } from './post-list-item';
-
-/**
- * ページ毎の表示件数（ポスト数）
- */
-// const POSTS_PER_PAGE = 20;
 
 interface PostListProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  posts: typeof mockPosts;
+  posts: PostEdges;
+  pageInfo: PostsPageInfo;
 }
 
-const PostList = ({ posts }: PostListProps) => {
+const PostList = ({ posts, pageInfo }: PostListProps) => {
   // const [pagination, setPagination] = useAtom(paginationAtom);
 
   // posts = filterPublishedPosts(posts);
@@ -35,11 +32,16 @@ const PostList = ({ posts }: PostListProps) => {
   return (
     <>
       <div className="grid gap-4 py-8 md:grid-cols-1">
-        {posts.map((post) => (
-          <PostListItem key={post.title} post={post} />
-        ))}
+        {posts &&
+          posts.map((post) => post && <PostListItem key={post.node?.id} post={post.node} />)}
       </div>
-      {/* <PostPagination /> */}
+      <div className="mt-4 flex justify-center">
+        {pageInfo.hasNextPage && (
+          <Link to={`?after=${pageInfo.endCursor}`}>
+            <button className="btn">次のページ</button>
+          </Link>
+        )}
+      </div>
     </>
   );
 };

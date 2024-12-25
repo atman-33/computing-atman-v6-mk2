@@ -5,8 +5,8 @@ import { GetPostsByUserArgs, GetPostsByUserQuery } from '~/lib/graphql/@generate
 import { ApiResponse, createErrorResponse, createSuccessResponse } from '~/utils/api-response';
 
 const getPostsByUserGql = graphql(`
-  query getPostsByUser($args: GetPostsByUserArgs!) {
-    postsByUser(args: $args) {
+  query getPostsByUser($args: GetPostsByUserArgs!, $first: Int, $after: String) {
+    postsByUser(args: $args, first: $first, after: $after) {
       edges {
         node {
           id
@@ -23,6 +23,11 @@ const getPostsByUserGql = graphql(`
           createdAt
           updatedAt
         }
+        cursor
+      }
+      pageInfo {
+        endCursor
+        hasNextPage
       }
       totalCount
     }
@@ -33,12 +38,16 @@ type GetPostsByUserResult = GetPostsByUserQuery['postsByUser'];
 
 const getPostsByUser = async (
   args: GetPostsByUserArgs,
+  first: number,
+  after?: string,
   request?: Request,
 ): Promise<ApiResponse<GetPostsByUserResult>> => {
   const client = await initializeClient(request);
   return await client
     .request(getPostsByUserGql, {
       args,
+      first,
+      after,
     })
     .then(({ postsByUser }) => {
       postsByUser?.edges;

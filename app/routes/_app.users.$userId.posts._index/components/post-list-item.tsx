@@ -1,11 +1,10 @@
 import { Link } from '@remix-run/react';
 import { BsThreeDotsVertical } from 'react-icons/bs';
+import { PostNode } from '../types';
 import { PostDate } from './post-date';
 
 interface PostListItemProps {
-  // TODO: 後で post の型を設定すること。
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  post: any;
+  post: PostNode;
 }
 
 const PostListItem = ({ post }: PostListItemProps) => {
