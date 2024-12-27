@@ -23,7 +23,6 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 
 const UserPosts = () => {
   const loaderData = useLoaderData<typeof loader>();
-  loaderData.data?.edges;
   // console.log(userId);
   return (
     <>

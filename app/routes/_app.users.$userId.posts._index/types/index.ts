@@ -6,4 +6,5 @@ type PostEdges = NonNullable<PostsByUser>['edges'];
 type PostEdge = NonNullable<PostEdges>[number];
 type PostNode = NonNullable<PostEdge>['node'];
 
+// export type PostEdgeArray = PostEdge[];
 export type { PostEdges, PostNode, PostsPageInfo };
