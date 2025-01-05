@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Spinner } from '~/components/shared/spinner';
 import { useIntersection } from '~/hooks/use-intersection';
 import { getPostsByUser } from '~/services/post/get-posts-by-user';
+import { POST_LIMIT } from '../route';
 import { PostEdges, PostsPageInfo } from '../types';
 import { PostListItem } from './post-list-item';
 
@@ -18,14 +19,13 @@ const PostList = ({ posts, pageInfo }: PostListProps) => {
   const [allPosts, setAllPosts] = useState<PostEdges>(posts);
   const [endCursor, setEndCursor] = useState<string | null>(pageInfo.endCursor ?? null);
   const [hasNextPage, setHasNextPage] = useState<boolean>(pageInfo.hasNextPage);
-
   const [isLoading, setIsLoading] = useState(false);
   const [isIntersecting, ref] = useIntersection();
 
   useEffect(() => {
     if (isIntersecting && hasNextPage && !isLoading) {
       setIsLoading(true);
-      fetcher.load(`/users/${userId}/posts?first=10&after=${endCursor}`);
+      fetcher.load(`/users/${userId}/posts?first=${POST_LIMIT}&after=${endCursor}`);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isIntersecting, pageInfo, isLoading, userId]);

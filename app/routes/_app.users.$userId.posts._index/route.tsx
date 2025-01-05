@@ -4,13 +4,13 @@ import { Button } from '~/components/shadcn/ui/button';
 import { getPostsByUser } from '~/services/post/get-posts-by-user';
 import { PostList } from './components/post-list';
 
-/** ページ毎の表示件数（ポスト数）*/
-const POSTS_PER_PAGE = 2;
+/** ローディングで取得する記事の件数*/
+export const POST_LIMIT = 2;
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
   const userId = params.userId;
-  const first = parseInt(url.searchParams.get('first') || POSTS_PER_PAGE.toString(), 10);
+  const first = parseInt(url.searchParams.get('first') || POST_LIMIT.toString(), 10);
   const after = url.searchParams.get('after') ?? undefined;
 
   if (userId) {
