@@ -1,7 +1,7 @@
 import { Link } from '@remix-run/react';
-import { BsThreeDotsVertical } from 'react-icons/bs';
 import { PostNode } from '../types';
 import { PostDate } from './post-date';
+import { PostListItemThreeDots } from './post-list-item-three-dots';
 
 interface PostListItemProps {
   post: PostNode;
@@ -27,7 +27,7 @@ const PostListItem = ({ post }: PostListItemProps) => {
         </div>
       </Link>
       <div className="px-4">
-        <BsThreeDotsVertical className="h-6 w-6" />
+        <PostListItemThreeDots />
       </div>
     </div>
   );
