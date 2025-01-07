@@ -1,3 +1,4 @@
+import { Link, useParams } from '@remix-run/react';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import {
   DropdownMenu,
@@ -7,8 +8,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '~/components/shadcn/ui/dropdown-menu';
+import { PostNode } from '../types';
 
-export const PostListItemThreeDots = () => {
+interface PostListItemThreeDotsProps {
+  post: PostNode;
+}
+
+export const PostListItemThreeDots = ({ post }: PostListItemThreeDotsProps) => {
+  const { userId } = useParams<{ userId: string }>();
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="focus:!outline-none">
@@ -16,7 +24,9 @@ export const PostListItemThreeDots = () => {
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuGroup>
-          <DropdownMenuItem>編集</DropdownMenuItem>
+          <Link to={`/users/${userId}/posts/${post?.id}/edit`}>
+            <DropdownMenuItem>編集</DropdownMenuItem>
+          </Link>
           {/* TODO: ここはstatusに応じて表示を変える */}
           <DropdownMenuItem>下書きに戻す</DropdownMenuItem>
         </DropdownMenuGroup>

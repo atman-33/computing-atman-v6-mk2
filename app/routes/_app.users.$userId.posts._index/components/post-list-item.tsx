@@ -27,7 +27,7 @@ const PostListItem = ({ post }: PostListItemProps) => {
         </div>
       </Link>
       <div className="px-4">
-        <PostListItemThreeDots />
+        <PostListItemThreeDots post={post} />
       </div>
     </div>
   );
