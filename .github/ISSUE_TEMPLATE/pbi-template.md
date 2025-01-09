@@ -10,8 +10,6 @@ assignees: ''
 ## Overview  
 <!-- Briefly describe the main issues, features, and expected outcomes of this PBI. -->
 
-### What will be done?  
-
 ### Why is this necessary?  
 
 ## Acceptance Criteria  
