@@ -26,6 +26,8 @@ interface LabelInputProps<Schema> {
   };
   label: string;
   placeholder?: string;
+  value?: string;
+  onChange?: (value: string) => void;
 }
 
 /**
@@ -38,8 +40,17 @@ const LabelInput = <Schema,>({
   options,
   label,
   placeholder,
+  value,
+  onChange,
 }: LabelInputProps<Schema>) => {
   const inputProps = getInputProps(metadata, options);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (onChange) {
+      onChange(e.target.value);
+    }
+  };
+
   return (
     <div className="flex w-full flex-col">
       <Label htmlFor={inputProps.id}>{label}</Label>
@@ -47,6 +58,8 @@ const LabelInput = <Schema,>({
         {...inputProps}
         placeholder={placeholder}
         className={`my-2 w-full rounded-xl border border-gray-300 p-2 outline-none ${!!metadata.errors && 'border-red-500'}`}
+        value={value}
+        onChange={handleChange}
       />
       {metadata.errors && (
         <div>
