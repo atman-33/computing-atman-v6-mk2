@@ -1,6 +1,5 @@
 import { useForm } from '@conform-to/react';
 import { parseWithZod } from '@conform-to/zod';
-import { useEffect } from 'react';
 import { z } from 'zod';
 
 const PostFormSchema = z.object({
@@ -19,11 +18,6 @@ const usePostForm = () => {
       return parseWithZod(formData, { schema: PostFormSchema });
     },
   });
-
-  useEffect(() => {
-    form[0].reset();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return form;
 };
