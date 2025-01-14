@@ -23,3 +23,5 @@ const PostEditPage = () => {
   console.log(form.allErrors);
   // ...
 ```
+
+2025/01/14追記: usePostForm内のuseEffectで、form.reset()をしていたため、上記の現象が発生した可能性あり。useEffectを削除するとコンソール出力せずともバリデーションエラーが表示されるように改善された。
