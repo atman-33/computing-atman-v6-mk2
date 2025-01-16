@@ -23,7 +23,7 @@ const PostList = ({ posts, pageInfo }: PostListProps) => {
   const [isIntersecting, ref] = useIntersection();
   const [retryCount, setRetryCount] = useState(0);
   const maxRetries = 3;
-  const retryTimeout = 5000; // 5秒
+  const retryTimeout = 3000; // 3秒
 
   useEffect(() => {
     if (isIntersecting && hasNextPage && !isLoading) {

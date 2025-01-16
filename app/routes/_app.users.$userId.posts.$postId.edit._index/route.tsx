@@ -41,8 +41,8 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
   const form = await request.formData();
-  const postId = form.get('postId') as string;
   const action = form.get('_action') as 'back' | 'save' | 'publish';
+  const postId = form.get('postId') as string;
 
   switch (action) {
     case 'back':
@@ -74,6 +74,9 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       };
       await updatePost(updatePostInput, request);
       return redirect(`/users/${params.userId}/posts/${postId}/edit/publish`);
+    }
+    default: {
+      throw new Error('_actionの設定ミスです!');
     }
   }
 };
