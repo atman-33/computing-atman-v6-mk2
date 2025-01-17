@@ -28,6 +28,10 @@ input GetPostArgs {
   id: String!
 }
 
+input GetPostsByUserArgs {
+  userId: String!
+}
+
 input GetTagArgs {
   id: String!
 }
@@ -80,8 +84,20 @@ type Query {
   nodes(ids: [ID!]!): [Node]!
   post(args: GetPostArgs!): Post
   posts(after: String, before: String, first: Int, last: Int): QueryPostsConnection
+  postsByUser(after: String, args: GetPostsByUserArgs!, before: String, first: Int, last: Int): QueryPostsByUserConnection
   tag(args: GetTagArgs!): Tag
   tags: [Tag!]
+}
+
+type QueryPostsByUserConnection {
+  edges: [QueryPostsByUserConnectionEdge]
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type QueryPostsByUserConnectionEdge {
+  cursor: String!
+  node: Post
 }
 
 type QueryPostsConnection {

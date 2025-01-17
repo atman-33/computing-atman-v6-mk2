@@ -1,11 +1,10 @@
 import { Link } from '@remix-run/react';
-import { BsThreeDotsVertical } from 'react-icons/bs';
+import { PostNode } from '../types';
 import { PostDate } from './post-date';
+import { PostListItemThreeDots } from './post-list-item-three-dots';
 
 interface PostListItemProps {
-  // TODO: 後で post の型を設定すること。
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  post: any;
+  post: PostNode;
 }
 
 const PostListItem = ({ post }: PostListItemProps) => {
@@ -28,7 +27,7 @@ const PostListItem = ({ post }: PostListItemProps) => {
         </div>
       </Link>
       <div className="px-4">
-        <BsThreeDotsVertical className="h-6 w-6" />
+        <PostListItemThreeDots post={post} />
       </div>
     </div>
   );

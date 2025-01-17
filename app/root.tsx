@@ -15,7 +15,10 @@ import { CustomToaster } from './components/shadcn/custom/custom-toaster';
 import { getSystemTheme } from './routes/resources.theme/services/system-theme';
 import { getThemeFromCookie } from './routes/resources.theme/services/theme.server';
 
-export const links: LinksFunction = () => [{ rel: 'stylesheet', href: tailwind }];
+export const links: LinksFunction = () => [
+  { rel: 'icon', href: '/favicons/favicon.ico', type: 'image/png' },
+  { rel: 'stylesheet', href: tailwind },
+];
 
 export const meta: MetaFunction = () => {
   return [

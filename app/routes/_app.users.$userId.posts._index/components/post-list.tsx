@@ -1,45 +1,88 @@
-import { mockPosts } from '~/mock/posts';
+import { useFetcher, useParams } from '@remix-run/react';
+import { useEffect, useState } from 'react';
+import { Spinner } from '~/components/shared/spinner';
+import { useIntersection } from '~/hooks/use-intersection';
+import { getPostsByUser } from '~/services/post/get-posts-by-user';
+import { POST_LIMIT } from '../route';
+import { useAllPostsStore } from '../stores/all-posts-store';
+import { PostEdges, PostsPageInfo } from '../types';
 import { PostListItem } from './post-list-item';
 
-/**
- * ページ毎の表示件数（ポスト数）
- */
-// const POSTS_PER_PAGE = 20;
-
 interface PostListProps {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  posts: typeof mockPosts;
+  posts: PostEdges;
+  pageInfo: PostsPageInfo;
 }
 
-const PostList = ({ posts }: PostListProps) => {
-  // const [pagination, setPagination] = useAtom(paginationAtom);
+const PostList = ({ posts, pageInfo }: PostListProps) => {
+  const { userId } = useParams<{ userId: string }>();
+  const fetcher = useFetcher();
 
-  // posts = filterPublishedPosts(posts);
-  // posts = sortPostsByDate(posts);
+  const allPosts = useAllPostsStore((state) => state.allPosts);
+  const setAllPosts = useAllPostsStore((state) => state.setAllPosts);
+  const addPosts = useAllPostsStore((state) => state.addPosts);
 
-  // const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE);
-  // const displayPosts = posts.slice(
-  //   (pagination.currentPage - 1) * POSTS_PER_PAGE,
-  //   pagination.currentPage * POSTS_PER_PAGE,
-  // );
+  const [endCursor, setEndCursor] = useState<string | null>(pageInfo.endCursor ?? null);
+  const [hasNextPage, setHasNextPage] = useState<boolean>(pageInfo.hasNextPage);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isIntersecting, ref] = useIntersection();
+  const [retryCount, setRetryCount] = useState(0);
+  const maxRetries = 10;
+  const retryTimeout = 1000; // 単位:秒
 
-  // useEffect(() => {
-  //   setPagination({
-  //     currentPage: 1,
-  //     totalPages,
-  //     itemsPerPage: POSTS_PER_PAGE,
-  //   });
-  // }, [totalPages, setPagination]);
+  useEffect(() => {
+    setAllPosts(posts);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  // console.log(posts);
+  useEffect(() => {
+    if (isIntersecting && hasNextPage && !isLoading) {
+      // console.log('Fetching more posts...');
+      setIsLoading(true);
+      fetcher.load(`/users/${userId}/posts?first=${POST_LIMIT}&after=${endCursor}`);
+      // console.log('fetcher state 1: ', fetcher.state);
+    }
+
+    // NOTE:
+    // fetcher.loadが正常に終了せず、isLoadingがfalseのまま終わらない場合があるため、
+    // タイマーを設定して、指定秒数後にリトライする。
+    const timeoutId = setTimeout(() => {
+      // console.log('fetcher state 2: ', fetcher.state);
+      if (isLoading && retryCount <= maxRetries) {
+        // console.log('Retrying fetch due to timeout...');
+        setIsLoading(false); // 再試行のためにisLoadingをリセット
+        setRetryCount((prevCount) => prevCount + 1);
+      }
+    }, retryTimeout);
+    // console.log('timeoutId', timeoutId);
+
+    return () => {
+      // console.log(`${timeoutId} clean up...`);
+      clearTimeout(timeoutId);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isIntersecting, pageInfo, isLoading, userId]);
+
+  useEffect(() => {
+    // console.log('fetcher.data updated...');
+    if (isIntersecting && fetcher.data) {
+      // console.log('New data fetched:', fetcher.data);
+      const newData = fetcher.data as Awaited<ReturnType<typeof getPostsByUser>>;
+      setEndCursor(newData.data?.pageInfo.endCursor ?? null);
+      setHasNextPage(newData.data?.pageInfo.hasNextPage ?? false);
+      addPosts(newData.data?.edges);
+      setIsLoading(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fetcher.data]);
+
   return (
     <>
       <div className="grid gap-4 py-8 md:grid-cols-1">
-        {posts.map((post) => (
-          <PostListItem key={post.title} post={post} />
-        ))}
+        {allPosts?.map((post) => post && <PostListItem key={post.node?.id} post={post.node} />)}
       </div>
-      {/* <PostPagination /> */}
+      <div ref={ref} className="mt-4 flex justify-center">
+        {isLoading && <Spinner />}
+      </div>
     </>
   );
 };
