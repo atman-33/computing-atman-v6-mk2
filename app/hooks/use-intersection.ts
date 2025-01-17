@@ -33,12 +33,14 @@ export const useIntersection = (options = {}): [boolean, LegacyRef<HTMLDivElemen
   useEffect(() => {
     // refTriggerが設定され、かつ監視対象の要素が存在する場合のみ実行
     if (refTrigger && ref.current) {
-      // IntersectionObserverのインスタンスを作成
       const observer = new IntersectionObserver(([entry], observer) => {
         // ビューポート内に要素が入った場合の処理
         if (entry.isIntersecting) {
-          setIsIntersecting(true); // 状態をtrueに更新
+          setIsIntersecting(true);
           observer.unobserve(entry.target); // 一度だけ監視するために監視解除
+        } else {
+          // ビューポート内から要素が出た場合の処理
+          setIsIntersecting(false);
         }
       }, options);
 
@@ -50,6 +52,5 @@ export const useIntersection = (options = {}): [boolean, LegacyRef<HTMLDivElemen
     }
   }, [options, refTrigger]);
 
-  // 要素のビューポート内状態と、監視対象の要素を設定するコールバック関数を返す。
   return [isIntersecting, callbackRef as LegacyRef<HTMLDivElement>];
 };

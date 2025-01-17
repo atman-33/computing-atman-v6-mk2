@@ -19,6 +19,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '~/components/shadcn/ui/dropdown-menu';
+import { useAllPostsStore } from '../stores/all-posts-store';
 import { PostNode } from '../types';
 
 interface PostListItemThreeDotsProps {
@@ -29,6 +30,8 @@ export const PostListItemThreeDots = ({ post }: PostListItemThreeDotsProps) => {
   const { userId } = useParams<{ userId: string }>();
   const fetcher = useFetcher();
 
+  const removePost = useAllPostsStore((state) => state.removePost);
+
   const handleDeleteClick = useCallback(() => {
     fetcher.submit(
       {
@@ -37,12 +40,11 @@ export const PostListItemThreeDots = ({ post }: PostListItemThreeDotsProps) => {
       },
       { method: 'post', action: '/resources/post' },
     );
+    removePost(post?.id ?? '');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [post?.id]);
 
   // NOTE: [shadcn/uiのドロップダウンメニューの中にアラートダイアログを使うときの注意](https://zenn.dev/miyabitti256/articles/7002672f5b0ea7)
-
-  // TODO: 削除はできたが記事一覧から削除したデータが消えないため修正必要
 
   return (
     <AlertDialog>

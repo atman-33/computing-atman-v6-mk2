@@ -4,6 +4,7 @@ import { Spinner } from '~/components/shared/spinner';
 import { useIntersection } from '~/hooks/use-intersection';
 import { getPostsByUser } from '~/services/post/get-posts-by-user';
 import { POST_LIMIT } from '../route';
+import { useAllPostsStore } from '../stores/all-posts-store';
 import { PostEdges, PostsPageInfo } from '../types';
 import { PostListItem } from './post-list-item';
 
@@ -16,14 +17,22 @@ const PostList = ({ posts, pageInfo }: PostListProps) => {
   const { userId } = useParams<{ userId: string }>();
   const fetcher = useFetcher();
 
-  const [allPosts, setAllPosts] = useState<PostEdges>(posts);
+  const allPosts = useAllPostsStore((state) => state.allPosts);
+  const setAllPosts = useAllPostsStore((state) => state.setAllPosts);
+  const addPosts = useAllPostsStore((state) => state.addPosts);
+
   const [endCursor, setEndCursor] = useState<string | null>(pageInfo.endCursor ?? null);
   const [hasNextPage, setHasNextPage] = useState<boolean>(pageInfo.hasNextPage);
   const [isLoading, setIsLoading] = useState(false);
   const [isIntersecting, ref] = useIntersection();
   const [retryCount, setRetryCount] = useState(0);
-  const maxRetries = 3;
-  const retryTimeout = 3000; // 3秒
+  const maxRetries = 10;
+  const retryTimeout = 1000; // 単位:秒
+
+  useEffect(() => {
+    setAllPosts(posts);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (isIntersecting && hasNextPage && !isLoading) {
@@ -55,16 +64,15 @@ const PostList = ({ posts, pageInfo }: PostListProps) => {
 
   useEffect(() => {
     // console.log('fetcher.data updated...');
-    if (fetcher.data) {
+    if (isIntersecting && fetcher.data) {
       // console.log('New data fetched:', fetcher.data);
       const newData = fetcher.data as Awaited<ReturnType<typeof getPostsByUser>>;
       setEndCursor(newData.data?.pageInfo.endCursor ?? null);
       setHasNextPage(newData.data?.pageInfo.hasNextPage ?? false);
-      setAllPosts((prevPosts) => {
-        return [...prevPosts!, ...(newData.data?.edges ?? [])] as PostEdges;
-      });
+      addPosts(newData.data?.edges);
       setIsLoading(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetcher.data]);
 
   return (
